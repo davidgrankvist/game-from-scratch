@@ -16,3 +16,6 @@ StretchDIBits
 BI_RGB
 WM_SIZE
 GetClientRect
+PeekMessage
+WM_QUIT
+InvalidateRect

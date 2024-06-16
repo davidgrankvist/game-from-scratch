@@ -8,6 +8,10 @@ namespace GameFromScratch.App
 	{
 		private BITMAPINFO bitmapInfo;
 		private byte[] bitmap;
+		public HWND hwnd;
+
+		private int biWidth;
+		private int biHeight;
 
 		public unsafe void CreateBitmap(int width, int height)
 		{
@@ -27,11 +31,14 @@ namespace GameFromScratch.App
 			{
 				bmiHeader = biHeader,
 			};
+			biWidth = width;
+			biHeight = height;
 
 			bitmap = new byte[width * height * numColors];
 		}
 
-		public void Draw(HWND hwnd)
+
+		public void Draw()
 		{
 			HDC hdc = PInvoke.BeginPaint(hwnd, out PAINTSTRUCT ps);
 
@@ -42,9 +49,6 @@ namespace GameFromScratch.App
 
 		private unsafe void DrawCurrentBitmap(HDC hdc, int width, int height)
 		{
-			var biWidth = bitmapInfo.bmiHeader.biWidth;
-			var biHeight = -bitmapInfo.bmiHeader.biHeight; // undo top-down DIB minus sign
-
 			fixed (BITMAPINFO* pBi = &bitmapInfo)
 			{
 				fixed (void* pBitmap = bitmap)
@@ -59,6 +63,17 @@ namespace GameFromScratch.App
 						ROP_CODE.SRCCOPY
 					);
 				}
+			}
+		}
+
+		public void Fill(byte r, byte g, byte b)
+		{
+			for (int i = 0; i < bitmap.Length; i += 3)
+			{
+				// On Windows, the color order is reversed
+				bitmap[i] = b;
+				bitmap[i + 1] = g;
+				bitmap[i + 2] = r;
 			}
 		}
 	}

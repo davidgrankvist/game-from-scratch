@@ -6,13 +6,15 @@ namespace GameFromScratch.App
 	internal class Win32WindowManager
 	{
 		private Win32BitmapDrawer bitmapDrawer;
+		private Game game;
 
-        public Win32WindowManager()
-        {
-            bitmapDrawer = new Win32BitmapDrawer();
-        }
+		public Win32WindowManager()
+		{
+			bitmapDrawer = new Win32BitmapDrawer();
+			game = new Game(bitmapDrawer);
+		}
 
-        public unsafe void CreateWindow()
+		public unsafe void CreateWindow()
 		{
 			var moduleHandle = PInvoke.GetModuleHandle((string?)null);
 			var hInstance = new HINSTANCE(moduleHandle.DangerousGetHandle());
@@ -47,17 +49,34 @@ namespace GameFromScratch.App
 				{
 					return;
 				}
+				bitmapDrawer.hwnd = hwnd;
 
 				PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOW);
 
 				// Message loop
-				// On exit -1 is received here, which is why we check for > 0
-				while(PInvoke.GetMessage(out MSG msg, hwnd, 0, 0) > 0)
+				while (true)
 				{
-					PInvoke.TranslateMessage(msg);
-					PInvoke.DispatchMessage(msg);
+					// process window message
+					var peek = PInvoke.PeekMessage(out MSG msg, HWND.Null, 0, 0, PEEK_MESSAGE_REMOVE_TYPE.PM_REMOVE);
+					if (msg.message == PInvoke.WM_QUIT)
+					{
+						break;
+					} else if (peek != 0)
+					{
+						PInvoke.TranslateMessage(msg);
+						PInvoke.DispatchMessage(msg);
+					}
+
+					// process game things
+					var didRun = game.RunFrame();
+
+					if (didRun)
+					{
+						// trigger paint
+						PInvoke.InvalidateRect(hwnd, (RECT?)null, false);
+					}
 				}
-            }
+			}
 		}
 
 		private LRESULT WindowProcedure(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
@@ -72,7 +91,7 @@ namespace GameFromScratch.App
 					PInvoke.PostQuitMessage(0);
 					break;
 				case PInvoke.WM_PAINT:
-					bitmapDrawer.Draw(hwnd);
+					bitmapDrawer.Draw();
 					break;
 				default:
 					return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
