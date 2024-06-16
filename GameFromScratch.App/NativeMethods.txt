@@ -11,6 +11,8 @@ PostQuitMessage
 WM_PAINT
 DefWindowProc
 BeginPaint
-CreateSolidBrush
-FillRect
 EndPaint
+StretchDIBits
+BI_RGB
+WM_SIZE
+GetClientRect

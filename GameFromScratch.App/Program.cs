@@ -4,7 +4,8 @@
 	{
 		static void Main(string[] args)
 		{
-			Win32WindowManager.CreateWindow();
+			var windowManager = new Win32WindowManager();
+			windowManager.CreateWindow();
 		}
 	}
 }

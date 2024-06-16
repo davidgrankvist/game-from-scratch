@@ -1,13 +1,18 @@
 using Windows.Win32;
 using Windows.Win32.Foundation;
-using Windows.Win32.Graphics.Gdi;
 using Windows.Win32.UI.WindowsAndMessaging;
-
 namespace GameFromScratch.App
 {
 	internal class Win32WindowManager
 	{
-		public static unsafe void CreateWindow()
+		private Win32BitmapDrawer bitmapDrawer;
+
+        public Win32WindowManager()
+        {
+            bitmapDrawer = new Win32BitmapDrawer();
+        }
+
+        public unsafe void CreateWindow()
 		{
 			var moduleHandle = PInvoke.GetModuleHandle((string?)null);
 			var hInstance = new HINSTANCE(moduleHandle.DangerousGetHandle());
@@ -31,10 +36,7 @@ namespace GameFromScratch.App
 					classNameStr,
 					"Game From Scratch",
 					WINDOW_STYLE.WS_OVERLAPPEDWINDOW,
-					PInvoke.CW_USEDEFAULT,
-					PInvoke.CW_USEDEFAULT,
-					PInvoke.CW_USEDEFAULT,
-					PInvoke.CW_USEDEFAULT,
+					PInvoke.CW_USEDEFAULT, PInvoke.CW_USEDEFAULT, PInvoke.CW_USEDEFAULT, PInvoke.CW_USEDEFAULT,
 					HWND.Null,
 					null,
 					moduleHandle,
@@ -45,6 +47,7 @@ namespace GameFromScratch.App
 				{
 					return;
 				}
+
 				PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOW);
 
 				// Message loop
@@ -57,32 +60,24 @@ namespace GameFromScratch.App
             }
 		}
 
-		private static LRESULT WindowProcedure(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
+		private LRESULT WindowProcedure(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
 		{
 			switch (msg)
 			{
+				case PInvoke.WM_SIZE:
+					PInvoke.GetClientRect(hwnd, out RECT rect);
+					bitmapDrawer.CreateBitmap(rect.Width, rect.Height);
+					break;
 				case PInvoke.WM_DESTROY:
 					PInvoke.PostQuitMessage(0);
 					break;
 				case PInvoke.WM_PAINT:
-					OnPaint(hwnd);
+					bitmapDrawer.Draw(hwnd);
 					break;
 				default:
 					return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
 			}
 			return new LRESULT(0);
-		}
-
-		private static void OnPaint(HWND hwnd)
-		{
-			// make sure client area is refilled when resizing the window
-			HDC hdc = PInvoke.BeginPaint(hwnd, out PAINTSTRUCT ps);
-
-			var whiteColorRef = new COLORREF(0x00ffffff); // TODO: RGB macro is not generated for some reason. Create a helper
-			var brush = PInvoke.CreateSolidBrush_SafeHandle(whiteColorRef);
-			PInvoke.FillRect(hdc, ps.rcPaint, brush);
-
-			PInvoke.EndPaint(hwnd, ps);
 		}
 	}
 }
