@@ -1,0 +1,16 @@
+GetModuleHandle
+RegisterClass
+CreateWindowEx
+CW_USEDEFAULT
+ShowWindow
+GetMessage
+TranslateMessage
+DispatchMessage
+WM_DESTROY
+PostQuitMessage
+WM_PAINT
+DefWindowProc
+BeginPaint
+CreateSolidBrush
+FillRect
+EndPaint
