@@ -1,15 +1,16 @@
-﻿using GameFromScratch.App.Win32Platform;
+﻿using GameFromScratch.App.Gameplay;
+using GameFromScratch.App.Platform;
 
 namespace GameFromScratch.App
 {
-	internal class Program
+    internal class Program
 	{
 		static void Main(string[] args)
 		{
-			var bitmapDrawer = new Win32BitmapDrawer();
-			var windowManager = new Win32WindowManager(bitmapDrawer);
+			var graphics = PlatformManager.GetGraphics2D(RendererType.SoftwareRenderer);
+			var windowManager = PlatformManager.GetWindowManager(graphics);
 
-			var game = new Game(windowManager, bitmapDrawer);
+			var game = new Game(windowManager, graphics);
 			game.Run();
 		}
 	}

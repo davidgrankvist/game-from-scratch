@@ -1,9 +1,11 @@
-﻿using Windows.Win32;
+﻿using System.Runtime.Versioning;
+using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
 
-namespace GameFromScratch.App.Win32Platform
+namespace GameFromScratch.App.Platform.Win32Platform
 {
+    [SupportedOSPlatform("windows7.0")]
     internal class Win32BitmapDrawer : IWin32Graphics2D
     {
         private BITMAPINFO bitmapInfo;
@@ -12,7 +14,7 @@ namespace GameFromScratch.App.Win32Platform
         private int biWidth;
         private int biHeight;
 
-        public HWND hwnd { get; set; }
+        public HWND Hwnd { get; set; }
 
         public unsafe void Resize(int width, int height)
         {
@@ -46,12 +48,12 @@ namespace GameFromScratch.App.Win32Platform
 			 *
 			 * InvalidateRect invalidates and BeginPaint validates it again, which means WM_PAINT is not triggered.
 			 */
-            PInvoke.InvalidateRect(hwnd, (RECT?)null, false);
-            HDC hdc = PInvoke.BeginPaint(hwnd, out PAINTSTRUCT ps);
+            PInvoke.InvalidateRect(Hwnd, (RECT?)null, false);
+            HDC hdc = PInvoke.BeginPaint(Hwnd, out PAINTSTRUCT ps);
 
             DrawCurrentBitmap(hdc, ps.rcPaint.Width, ps.rcPaint.Height);
 
-            PInvoke.EndPaint(hwnd, ps);
+            PInvoke.EndPaint(Hwnd, ps);
         }
 
         private unsafe void DrawCurrentBitmap(HDC hdc, int width, int height)
