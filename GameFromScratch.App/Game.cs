@@ -2,18 +2,39 @@
 {
 	internal class Game
 	{
-		private Win32BitmapDrawer bitmapDrawer;
+		private IWindowManager windowManager;
+		private IGraphics2D graphics2D;
+		private FpsThrottler fpsThrottler;
 
 		private long animationLastTick = DateTime.MinValue.Ticks;
 		private byte animationRed = 0;
 		private int animationSign = 1;
 
-		public Game(Win32BitmapDrawer bitmapDrawer)
+		public Game(IWindowManager windowManager, IGraphics2D graphics2D)
 		{
-			this.bitmapDrawer = bitmapDrawer;
+			this.windowManager = windowManager;
+			this.graphics2D = graphics2D;
+			fpsThrottler = new FpsThrottler();
 		}
 
-		public void RunFrame()
+		public void Run()
+		{
+			windowManager.CreateWindow();
+
+			while (windowManager.IsRunning)
+			{
+				windowManager.ProcessMessage();
+
+				if (!fpsThrottler.PollIsReady())
+				{
+					continue;
+				}
+
+				Update();
+			}
+		}
+
+		public void Update()
 		{
 			RunTestAnimation();
 		}
@@ -32,9 +53,11 @@
 					animationSign = 1;
 				}
 				animationRed = (byte)(animationRed + animationSign);
-				bitmapDrawer.Fill(animationRed, 0, 0);
+				graphics2D.Fill(animationRed, 0, 0);
 
 				animationLastTick = DateTime.UtcNow.Ticks;
+
+				graphics2D.Commit();
 			}
 		}
 	}

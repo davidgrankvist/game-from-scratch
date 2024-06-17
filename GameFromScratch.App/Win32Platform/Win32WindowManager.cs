@@ -1,18 +1,20 @@
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
-namespace GameFromScratch.App
+
+namespace GameFromScratch.App.Win32Platform
 {
-	internal class Win32WindowManager
+	internal class Win32WindowManager : IWindowManager
 	{
-		private Win32BitmapDrawer bitmapDrawer;
+		private IWin32Graphics2D graphics2D;
 		private WNDPROC wndProc; // Prevent window procedure delegate from being garbage collected
 
-		public bool IsRunning { get; private set; }
+		private bool isRunning;
+		public bool IsRunning { get => isRunning; }
 
-        public Win32WindowManager(Win32BitmapDrawer bitmapDrawer)
+		public Win32WindowManager(IWin32Graphics2D graphics2D)
 		{
-			this.bitmapDrawer = bitmapDrawer;
+			this.graphics2D = graphics2D;
 		}
 
 		public unsafe void CreateWindow()
@@ -51,12 +53,12 @@ namespace GameFromScratch.App
 				{
 					return;
 				}
-				bitmapDrawer.hwnd = hwnd;
+				graphics2D.hwnd = hwnd;
 
 				PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOW);
 			}
 
-			IsRunning = true;
+			isRunning = true;
 		}
 
 		public void ProcessMessage()
@@ -64,7 +66,7 @@ namespace GameFromScratch.App
 			var peek = PInvoke.PeekMessage(out MSG msg, HWND.Null, 0, 0, PEEK_MESSAGE_REMOVE_TYPE.PM_REMOVE);
 			if (msg.message == PInvoke.WM_QUIT)
 			{
-				IsRunning = false;
+				isRunning = false;
 				return;
 			}
 			else if (peek != 0)
@@ -80,7 +82,7 @@ namespace GameFromScratch.App
 			{
 				case PInvoke.WM_SIZE:
 					PInvoke.GetClientRect(hwnd, out RECT rect);
-					bitmapDrawer.CreateBitmap(rect.Width, rect.Height);
+					graphics2D.Resize(rect.Width, rect.Height);
 					break;
 				case PInvoke.WM_DESTROY:
 					PInvoke.PostQuitMessage(0);
