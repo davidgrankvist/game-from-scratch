@@ -6,14 +6,13 @@ namespace GameFromScratch.App
 	internal class Win32WindowManager
 	{
 		private Win32BitmapDrawer bitmapDrawer;
-		private Game game;
-		private FpsThrottler fpsThrottler;
+		private WNDPROC wndProc; // Prevent window procedure delegate from being garbage collected
 
-		public Win32WindowManager()
+		public bool IsRunning { get; private set; }
+
+        public Win32WindowManager(Win32BitmapDrawer bitmapDrawer)
 		{
-			bitmapDrawer = new Win32BitmapDrawer();
-			game = new Game(bitmapDrawer);
-			fpsThrottler = new FpsThrottler();
+			this.bitmapDrawer = bitmapDrawer;
 		}
 
 		public unsafe void CreateWindow()
@@ -32,6 +31,7 @@ namespace GameFromScratch.App
 					hInstance = hInstance,
 					lpszClassName = className,
 				};
+				wndProc = wc.lpfnWndProc;
 				PInvoke.RegisterClass(wc);
 
 				// Create and show the window
@@ -54,33 +54,23 @@ namespace GameFromScratch.App
 				bitmapDrawer.hwnd = hwnd;
 
 				PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOW);
+			}
 
-				// Message loop
-				while (true)
-				{
-					// process window message
-					var peek = PInvoke.PeekMessage(out MSG msg, HWND.Null, 0, 0, PEEK_MESSAGE_REMOVE_TYPE.PM_REMOVE);
-					if (msg.message == PInvoke.WM_QUIT)
-					{
-						break;
-					}
-					else if (peek != 0)
-					{
-						PInvoke.TranslateMessage(msg);
-						PInvoke.DispatchMessage(msg);
-					}
+			IsRunning = true;
+		}
 
-					if (!fpsThrottler.PollIsReady())
-					{
-						continue;
-					}
-
-					// process game things
-					game.RunFrame();
-
-					// render
-					bitmapDrawer.Draw();
-				}
+		public void ProcessMessage()
+		{
+			var peek = PInvoke.PeekMessage(out MSG msg, HWND.Null, 0, 0, PEEK_MESSAGE_REMOVE_TYPE.PM_REMOVE);
+			if (msg.message == PInvoke.WM_QUIT)
+			{
+				IsRunning = false;
+				return;
+			}
+			else if (peek != 0)
+			{
+				PInvoke.TranslateMessage(msg);
+				PInvoke.DispatchMessage(msg);
 			}
 		}
 
