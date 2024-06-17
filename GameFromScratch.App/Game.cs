@@ -3,7 +3,6 @@
 	internal class Game
 	{
 		private Win32BitmapDrawer bitmapDrawer;
-		private FpsThrottler throttler;
 
 		private long animationLastTick = DateTime.MinValue.Ticks;
 		private byte animationRed = 0;
@@ -12,18 +11,11 @@
 		public Game(Win32BitmapDrawer bitmapDrawer)
 		{
 			this.bitmapDrawer = bitmapDrawer;
-			throttler = new FpsThrottler();
 		}
 
-		public bool RunFrame()
+		public void RunFrame()
 		{
-			if (!throttler.PollIsReady())
-			{
-				return false;
-			}
-
 			RunTestAnimation();
-			return true;
 		}
 
 		private void RunTestAnimation()

@@ -7,11 +7,13 @@ namespace GameFromScratch.App
 	{
 		private Win32BitmapDrawer bitmapDrawer;
 		private Game game;
+		private FpsThrottler fpsThrottler;
 
 		public Win32WindowManager()
 		{
 			bitmapDrawer = new Win32BitmapDrawer();
 			game = new Game(bitmapDrawer);
+			fpsThrottler = new FpsThrottler();
 		}
 
 		public unsafe void CreateWindow()
@@ -61,20 +63,23 @@ namespace GameFromScratch.App
 					if (msg.message == PInvoke.WM_QUIT)
 					{
 						break;
-					} else if (peek != 0)
+					}
+					else if (peek != 0)
 					{
 						PInvoke.TranslateMessage(msg);
 						PInvoke.DispatchMessage(msg);
 					}
 
-					// process game things
-					var didRun = game.RunFrame();
-
-					if (didRun)
+					if (!fpsThrottler.PollIsReady())
 					{
-						// trigger paint
-						PInvoke.InvalidateRect(hwnd, (RECT?)null, false);
+						continue;
 					}
+
+					// process game things
+					game.RunFrame();
+
+					// trigger paint
+					PInvoke.InvalidateRect(hwnd, (RECT?)null, false);
 				}
 			}
 		}
