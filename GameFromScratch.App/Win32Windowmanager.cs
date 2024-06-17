@@ -78,8 +78,8 @@ namespace GameFromScratch.App
 					// process game things
 					game.RunFrame();
 
-					// trigger paint
-					PInvoke.InvalidateRect(hwnd, (RECT?)null, false);
+					// render
+					bitmapDrawer.Draw();
 				}
 			}
 		}
@@ -96,7 +96,7 @@ namespace GameFromScratch.App
 					PInvoke.PostQuitMessage(0);
 					break;
 				case PInvoke.WM_PAINT:
-					bitmapDrawer.Draw();
+					// Do nothing as painting is handled by the rendering code
 					break;
 				default:
 					return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);

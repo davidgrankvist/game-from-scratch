@@ -40,6 +40,13 @@ namespace GameFromScratch.App
 
 		public void Draw()
 		{
+			/*
+			 * Instead of invalidating, waiting for a WM_PAINT and then drawing from the window procedure,
+			 * we do it all in one place.
+			 *
+			 * InvalidateRect invalidates and BeginPaint validates it again, which means WM_PAINT is not triggered.
+			 */
+			PInvoke.InvalidateRect(hwnd, (RECT?)null, false);
 			HDC hdc = PInvoke.BeginPaint(hwnd, out PAINTSTRUCT ps);
 
 			DrawCurrentBitmap(hdc, ps.rcPaint.Width, ps.rcPaint.Height);
