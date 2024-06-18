@@ -1,4 +1,5 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Drawing;
+using System.Runtime.Versioning;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
@@ -75,14 +76,14 @@ namespace GameFromScratch.App.Platform.Win32Platform
             }
         }
 
-        public void Fill(byte r, byte g, byte b)
+        public void Fill(Color color)
         {
             for (int i = 0; i < bitmap.Length; i += 3)
             {
                 // On Windows, the color order is reversed
-                bitmap[i] = b;
-                bitmap[i + 1] = g;
-                bitmap[i + 2] = r;
+                bitmap[i] = color.B;
+                bitmap[i + 1] = color.G;
+                bitmap[i + 2] = color.R;
             }
         }
     }

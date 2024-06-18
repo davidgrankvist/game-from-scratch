@@ -1,4 +1,5 @@
 ﻿using GameFromScratch.App.Framework;
+using System.Drawing;
 
 namespace GameFromScratch.App.Gameplay
 {
@@ -29,7 +30,7 @@ namespace GameFromScratch.App.Gameplay
 					animationSign = 1;
 				}
 				animationRed = (byte)(animationRed + animationSign);
-				graphics.Fill(animationRed, 0, 0);
+				graphics.Fill(Color.FromArgb(animationRed, 0, 0));
 
 				animationLastTick = DateTime.UtcNow.Ticks;
 
