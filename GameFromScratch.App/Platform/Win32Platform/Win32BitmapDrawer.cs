@@ -10,24 +10,24 @@ namespace GameFromScratch.App.Platform.Win32Platform
     internal class Win32BitmapDrawer : IWin32Graphics2D
     {
         private BITMAPINFO bitmapInfo;
-        private byte[] bitmap;
+        private int[] bitmap;
 
-        private int biWidth;
-        private int biHeight;
+        private int width;
+        private int height;
 
         public HWND Hwnd { get; set; }
 
         public unsafe void Resize(int width, int height)
         {
-            var numColors = 3;
-            var bitsPerColor = 8;
+            // 3 colors + 1 byte padding = 32 bits
+            var pixelSize = 32;
 
             var biHeader = new BITMAPINFOHEADER
             {
                 biSize = (uint)sizeof(BITMAPINFOHEADER),
                 biWidth = width,
                 biHeight = -height, // If biHeight is negative, the bitmap is a top-down DIB with the origin at the upper left corner
-                biBitCount = (ushort)(numColors * bitsPerColor),
+                biBitCount = (ushort)pixelSize,
                 biPlanes = 1,
                 biCompression = (uint)BI_COMPRESSION.BI_RGB,
             };
@@ -35,10 +35,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
             {
                 bmiHeader = biHeader,
             };
-            biWidth = width;
-            biHeight = height;
+            this.width = width;
+            this.height = height;
 
-            bitmap = new byte[width * height * numColors];
+            bitmap = new int[width * height];
         }
 
         public void Commit()
@@ -66,7 +66,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     PInvoke.StretchDIBits(
                         hdc,
                         0, 0, width, height,
-                        0, 0, biWidth, biHeight,
+                        0, 0, this.width, this.height,
                         pBitmap,
                         pBi,
                         DIB_USAGE.DIB_RGB_COLORS,
@@ -78,13 +78,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void Fill(Color color)
         {
-            for (int i = 0; i < bitmap.Length; i += 3)
-            {
-                // On Windows, the color order is reversed
-                bitmap[i] = color.B;
-                bitmap[i + 1] = color.G;
-                bitmap[i + 2] = color.R;
-            }
+            Array.Fill(bitmap, color.ToArgb());
         }
     }
 }
