@@ -15,6 +15,8 @@ namespace GameFromScratch.App.Gameplay
         private Vector2 rectanglePos = new Vector2(50, 50);
         private Vector2 rectangleVelocity = new Vector2(2f, 1.5f);
 
+        private Vector2 circlePos = new Vector2(100, 100);
+
         public TestAnimation(IGraphics2D graphics)
         {
             this.graphics = graphics;
@@ -24,6 +26,7 @@ namespace GameFromScratch.App.Gameplay
         {
             AnimateBackground();
             AnimateRectangle();
+            AnimateCircle();
 
             graphics.Commit();
         }
@@ -61,6 +64,11 @@ namespace GameFromScratch.App.Gameplay
 
             rectanglePos += rectangleVelocity;
             graphics.DrawRectangle(rectanglePos, 100, 100, Color.Green);
+        }
+
+        private void AnimateCircle()
+        {
+            graphics.DrawCircle(circlePos, 50, Color.Blue);
         }
     }
 }

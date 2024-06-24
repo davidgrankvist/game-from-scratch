@@ -103,13 +103,13 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void DrawRectangle(Vector2 position, float width, float height, Color color)
         {
-            // Assumes that world coordinates are pixels
+            // x/y components of corners
             var px = ToNearestPixel(position.X);
             var py = ToNearestPixel(position.Y);
             var pw = ToNearestPixel(position.X + width);
             var ph = ToNearestPixel(position.Y + height);
 
-            // Only draw pixels within the viewbox (which is the entire bitmap for now)
+            // visible part of rectangle
             var pxStart = Math.Max(px, 0);
             var pxEnd = Math.Min(pw, Width);
             var pyStart = Math.Max(py, 0);
@@ -120,6 +120,41 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
                     SetPixel(ix, iy, color);
+                }
+            }
+        }
+
+        public void DrawCircle(Vector2 position, float radius, Color color)
+        {
+            // center
+            var cx = ToNearestPixel(position.X);
+            var cy = ToNearestPixel(position.Y);
+
+            // bounding box
+            var px = ToNearestPixel(position.X - radius);
+            var py = ToNearestPixel(position.Y - radius);
+            var pw = ToNearestPixel(px + 2 * radius);
+            var ph = ToNearestPixel(py + 2 * radius);
+
+            // visible part of bounding box
+            var pxStart = Math.Max(px, 0);
+            var pxEnd = Math.Min(pw, Width);
+            var pyStart = Math.Max(py, 0);
+            var pyEnd = Math.Min(ph, Height);
+
+            // color pixels where the distance from the center is at most the radius
+            for (var ix = pxStart; ix < pxEnd; ix++)
+            {
+                var dx = (ix - cx);
+                for (var iy = pyStart; iy < pyEnd; iy++)
+                {
+                    var dy = (iy - cy);
+                    var squaredDistance = dx * dx + dy * dy;
+
+                    if (squaredDistance <= radius * radius)
+                    {
+                        SetPixel(ix, iy, color);
+                    }
                 }
             }
         }
