@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Numerics;
 using System.Runtime.Versioning;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -12,8 +13,8 @@ namespace GameFromScratch.App.Platform.Win32Platform
         private BITMAPINFO bitmapInfo;
         private int[] bitmap;
 
-        private int width;
-        private int height;
+        private int Width;
+        private int Height;
 
         public HWND Hwnd { get; set; }
 
@@ -35,8 +36,8 @@ namespace GameFromScratch.App.Platform.Win32Platform
             {
                 bmiHeader = biHeader,
             };
-            this.width = width;
-            this.height = height;
+            Width = width;
+            Height = height;
 
             bitmap = new int[width * height];
         }
@@ -66,7 +67,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     PInvoke.StretchDIBits(
                         hdc,
                         0, 0, width, height,
-                        0, 0, this.width, this.height,
+                        0, 0, Width, Height,
                         pBitmap,
                         pBi,
                         DIB_USAGE.DIB_RGB_COLORS,
@@ -76,9 +77,51 @@ namespace GameFromScratch.App.Platform.Win32Platform
             }
         }
 
+        /*
+         * TODO(improvement): Separate rendering parts below from the Win32 bitmap specifics
+         */
+
         public void Fill(Color color)
         {
             Array.Fill(bitmap, color.ToArgb());
+        }
+
+        private void SetPixel(int x, int y, Color color)
+        {
+            bitmap[ToIndex(x, y)] = color.ToArgb();
+        }
+
+        private int ToIndex(int x, int y)
+        {
+            return y * Width + x;
+        }
+
+        private static int ToNearestPixel(float f)
+        {
+            return (int)(f + 0.5);
+        }
+
+        public void DrawRectangle(Vector2 position, float width, float height, Color color)
+        {
+            // Assumes that world coordinates are pixels
+            var px = ToNearestPixel(position.X);
+            var py = ToNearestPixel(position.Y);
+            var pw = ToNearestPixel(position.X + width);
+            var ph = ToNearestPixel(position.Y + height);
+
+            // Only draw pixels within the viewbox (which is the entire bitmap for now)
+            var pxStart = Math.Max(px, 0);
+            var pxEnd = Math.Min(pw, Width);
+            var pyStart = Math.Max(py, 0);
+            var pyEnd = Math.Min(ph, Height);
+
+            for (var ix = pxStart; ix < pxEnd; ix++)
+            {
+                for (var iy = pyStart; iy < pyEnd; iy++)
+                {
+                    SetPixel(ix, iy, color);
+                }
+            }
         }
     }
 }
