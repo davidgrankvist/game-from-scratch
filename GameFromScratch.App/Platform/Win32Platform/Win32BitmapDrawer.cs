@@ -215,5 +215,93 @@ namespace GameFromScratch.App.Platform.Win32Platform
         {
             return a.X * b.Y - a.Y * b.X;
         }
+
+        public void DrawRectangleRotated(Vector2 position, float width, float height,  Color color, float angle, Vector2 origin)
+        {
+            // corners
+            var topLeft = position;
+            var topRight = position + new Vector2(width, 0);
+            var bottomLeft = position + new Vector2(0, height);
+            var bottomRight = position + new Vector2(width, height);
+
+            // rotated corners
+            var topLeftRotated = RotatePoint(topLeft, angle, origin);
+            var topRightRotated = RotatePoint(topRight, angle, origin);
+            var bottomLeftRotated = RotatePoint(bottomLeft, angle, origin);
+            var bottomRightRotated = RotatePoint(bottomRight, angle, origin);
+
+            // draw the rectangle
+            DrawRectangleByPoints(topLeftRotated, topRightRotated, bottomRightRotated, bottomLeftRotated, color);
+        }
+
+        private static Vector2 RotatePoint(Vector2 point, float angle, Vector2 origin)
+        {
+            var sin = MathF.Sin(angle);
+            var cos = MathF.Cos(angle);
+
+            var translated = point - origin;
+            var rotated = new Vector2(translated.X * cos - translated.Y * sin, translated.X * sin + translated.Y * cos);
+            var result = rotated + origin;
+
+            return result;
+        }
+
+        // TODO(improvement): very similar to triangle code - generalize?
+        private void DrawRectangleByPoints(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color)
+        {
+            // pixel coordinates
+            var apx = ToNearestPixel(a.X);
+            var apy = ToNearestPixel(a.Y);
+
+            var bpx = ToNearestPixel(b.X);
+            var bpy = ToNearestPixel(b.Y);
+
+            var cpx = ToNearestPixel(c.X);
+            var cpy = ToNearestPixel(c.Y);
+
+            var dpx = ToNearestPixel(d.X);
+            var dpy = ToNearestPixel(d.Y);
+
+            // bounding box
+            var pxMin = Math.Min(Math.Min(apx, bpx), Math.Min(cpx, dpx));
+            var pxMax = Math.Max(Math.Max(apx, bpx), Math.Max(cpx, dpx));
+            var pyMin = Math.Min(Math.Min(apy, bpy), Math.Min(cpy, dpy));
+            var pyMax = Math.Max(Math.Max(apy, bpy), Math.Max(cpy, dpy));
+
+            // visible part of bounding box
+            var pxStart = Math.Min(pxMin, 0);
+            var pxEnd = Math.Max(pxMax, Width);
+            var pyStart = Math.Min(pyMin, 0);
+            var pyEnd = Math.Min(pyMax, Height);
+
+            // edges
+            var ab = b - a;
+            var bc = c - b;
+            var cd = d - c;
+            var da = a - d;
+
+            for (var ix = pxStart; ix < pxEnd; ix++)
+            {
+                for (var iy = pyStart; iy < pyEnd; iy++)
+                {
+                    var p = new Vector2(ix, iy);
+                    /*
+                     * Walking around the edges, p should be either to your left or right
+                     * the entire time. If it switches back and forth, it can't be in the area.
+                     *
+                     * The cross product determines the orientation for the "to the left/right" checks.
+                     */
+                    var isInRectangle = CrossProduct(ab, p - a) >= 0
+                        && CrossProduct(bc, p - b) >= 0
+                        && CrossProduct(cd, p - c) >= 0
+                        && CrossProduct(da, p - d) >= 0;
+
+                    if (isInRectangle)
+                    {
+                        SetPixel(ix, iy, color);
+                    }
+                }
+            }
+        }
     }
 }

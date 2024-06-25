@@ -21,6 +21,9 @@ namespace GameFromScratch.App.Gameplay
         private Vector2 triangleB = new Vector2(250, 100);
         private Vector2 triangleC = new Vector2(225, 220);
 
+        private Vector2 spinningRectanglePos = new Vector2(300, 100);
+        private float spinningRectangleAngle = 0f;
+
         public TestAnimation(IGraphics2D graphics)
         {
             this.graphics = graphics;
@@ -32,6 +35,7 @@ namespace GameFromScratch.App.Gameplay
             AnimateRectangle();
             AnimateCircle();
             AnimateTriangle();
+            AnimateSpinningRectangle();
 
             graphics.Commit();
         }
@@ -79,6 +83,13 @@ namespace GameFromScratch.App.Gameplay
         private void AnimateTriangle()
         {
             graphics.DrawTriangle(triangleA, triangleB, triangleC, Color.Chocolate);
+        }
+
+        private void AnimateSpinningRectangle()
+        {
+            spinningRectangleAngle += 0.01f;
+            var rectangleCenter = spinningRectanglePos + new Vector2(25, 25);
+            graphics.DrawRectangleRotated(spinningRectanglePos, 50, 50, Color.Beige, spinningRectangleAngle, rectangleCenter);
         }
     }
 }
