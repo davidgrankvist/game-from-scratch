@@ -17,6 +17,10 @@ namespace GameFromScratch.App.Gameplay
 
         private Vector2 circlePos = new Vector2(100, 100);
 
+        private Vector2 triangleA = new Vector2(200, 125);
+        private Vector2 triangleB = new Vector2(250, 100);
+        private Vector2 triangleC = new Vector2(225, 220);
+
         public TestAnimation(IGraphics2D graphics)
         {
             this.graphics = graphics;
@@ -27,6 +31,7 @@ namespace GameFromScratch.App.Gameplay
             AnimateBackground();
             AnimateRectangle();
             AnimateCircle();
+            AnimateTriangle();
 
             graphics.Commit();
         }
@@ -69,6 +74,11 @@ namespace GameFromScratch.App.Gameplay
         private void AnimateCircle()
         {
             graphics.DrawCircle(circlePos, 50, Color.Blue);
+        }
+
+        private void AnimateTriangle()
+        {
+            graphics.DrawTriangle(triangleA, triangleB, triangleC, Color.Chocolate);
         }
     }
 }

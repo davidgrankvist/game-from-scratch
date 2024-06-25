@@ -14,5 +14,7 @@ namespace GameFromScratch.App.Framework
         public void DrawRectangle(Vector2 position, float width, float height, Color color);
 
         public void DrawCircle(Vector2 position, float radius, Color color);
+
+        public void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color);
     }
 }

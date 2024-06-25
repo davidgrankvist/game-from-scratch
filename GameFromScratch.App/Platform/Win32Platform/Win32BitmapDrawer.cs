@@ -158,5 +158,62 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 }
             }
         }
+
+        public void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color)
+        {
+            // pixel coordinates
+            var apx = ToNearestPixel(a.X);
+            var apy = ToNearestPixel(a.Y);
+
+            var bpx = ToNearestPixel(b.X);
+            var bpy = ToNearestPixel(b.Y);
+
+            var cpx = ToNearestPixel(c.X);
+            var cpy = ToNearestPixel(c.Y);
+
+            // bounding box
+            var pxMin = Math.Min(Math.Min(apx, bpx), cpx);
+            var pxMax = Math.Max(Math.Max(apx, bpx), cpx);
+            var pyMin = Math.Min(Math.Min(apy, bpy), cpy);
+            var pyMax = Math.Max(Math.Max(apy, bpy), cpy);
+
+            // visible part of bounding box
+            var pxStart = Math.Min(pxMin, 0);
+            var pxEnd = Math.Max(pxMax, Width);
+            var pyStart = Math.Min(pyMin, 0);
+            var pyEnd = Math.Min(pyMax, Height);
+
+            // triangle edges
+            var ab = b - a;
+            var bc = c - b;
+            var ca = a - c;
+
+            for (var ix = pxStart; ix < pxEnd; ix++)
+            {
+                for (var iy = pyStart; iy < pyEnd; iy++)
+                {
+                    var p = new Vector2(ix, iy);
+                    /*
+                     * Walking around the triangle, p should be either to your left or right
+                     * the entire time. If it switches back and forth, it can't be in the triangle.
+                     *
+                     * The cross product determines the orientation for the "to the left/right" checks.
+                     */
+                    var isInTriangle = CrossProduct(ab, p - a) >= 0
+                        && CrossProduct(bc, p - b) >= 0
+                        && CrossProduct(ca, p - c) >= 0;
+
+                    if (isInTriangle)
+                    {
+                        SetPixel(ix, iy, color);
+                    }
+                }
+            }
+        }
+
+        private static float CrossProduct(Vector2 a, Vector2 b)
+        {
+            return a.X * b.Y - a.Y * b.X;
+        }
     }
 }
