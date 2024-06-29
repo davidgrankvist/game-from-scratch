@@ -1,9 +1,7 @@
-﻿namespace GameFromScratch.App.Framework
+﻿namespace GameFromScratch.App.Framework.Fps
 {
     internal class FpsThrottler
     {
-        // 1 tick = 100 ns = ten millionth of a second
-        private const int TICKS_PER_SECOND = 10_000_000;
         private const int DEFAULT_FPS = 60;
 
         private long lastTick;
@@ -21,7 +19,7 @@
 
         private static double GetTargetTicksPerFrame(int fps)
         {
-            return TICKS_PER_SECOND / fps;
+            return FpsConstants.TICKS_PER_SECOND / fps;
         }
 
         public bool PollIsReady()

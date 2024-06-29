@@ -1,4 +1,5 @@
 ﻿using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Fps;
 
 namespace GameFromScratch.App.Gameplay
 {
@@ -9,6 +10,9 @@ namespace GameFromScratch.App.Gameplay
         private readonly FpsThrottler fpsThrottler;
 
         private readonly TestAnimation testAnimation;
+        private readonly FpsSampler fpsSampler;
+
+        private const bool debugMode = false;
 
         public Game(IWindowManager windowManager, IGraphics2D graphics)
         {
@@ -17,6 +21,7 @@ namespace GameFromScratch.App.Gameplay
             fpsThrottler = new FpsThrottler();
 
             testAnimation = new TestAnimation(graphics);
+            fpsSampler = new FpsSampler(100);
         }
 
         public void Run()
@@ -33,12 +38,23 @@ namespace GameFromScratch.App.Gameplay
                 }
 
                 Update();
+
+                PrintFps();
             }
         }
 
-        public void Update()
+        private void Update()
         {
             testAnimation.Update();
+        }
+
+        private void PrintFps()
+        {
+            if (debugMode)
+            {
+                fpsSampler.Sample();
+                Console.WriteLine($"FPS: {fpsSampler.Fps}");
+            }
         }
     }
 }
