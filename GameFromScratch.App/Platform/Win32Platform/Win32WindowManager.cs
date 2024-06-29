@@ -1,5 +1,6 @@
 using System.Runtime.Versioning;
 using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Input;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -10,14 +11,17 @@ namespace GameFromScratch.App.Platform.Win32Platform
     internal class Win32WindowManager : IWindowManager
     {
         private IWin32Graphics2D graphics;
+        private Win32InputBuffer inputBuffer;
+        private bool isRunning;
         private WNDPROC? wndProc; // Prevent window procedure delegate from being garbage collected
 
-        private bool isRunning;
         public bool IsRunning { get => isRunning; }
+        public InputBuffer Input { get => inputBuffer; }
 
         public Win32WindowManager(IWin32Graphics2D graphics)
         {
             this.graphics = graphics;
+            inputBuffer = new Win32InputBuffer();
         }
 
         public unsafe void CreateWindow()
@@ -92,6 +96,12 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     break;
                 case PInvoke.WM_PAINT:
                     // Do nothing as painting is handled by the rendering code
+                    break;
+                case PInvoke.WM_KEYDOWN:
+                    inputBuffer.HandleKeyDown((byte)wParam, (int)lParam);
+                    break;
+                case PInvoke.WM_KEYUP:
+                    inputBuffer.HandleKeyUp((byte)wParam, (int)lParam);
                     break;
                 default:
                     return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);

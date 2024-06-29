@@ -1,4 +1,6 @@
-﻿namespace GameFromScratch.App.Framework
+﻿using GameFromScratch.App.Framework.Input;
+
+namespace GameFromScratch.App.Framework
 {
     internal interface IWindowManager
     {
@@ -7,5 +9,7 @@
         public void CreateWindow();
 
         public void ProcessMessage();
+
+        public InputBuffer Input { get; }
     }
 }

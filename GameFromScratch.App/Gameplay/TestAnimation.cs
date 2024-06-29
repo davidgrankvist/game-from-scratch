@@ -1,4 +1,5 @@
 ﻿using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Input;
 using System.Drawing;
 using System.Numerics;
 
@@ -7,6 +8,7 @@ namespace GameFromScratch.App.Gameplay
     internal class TestAnimation
     {
         private readonly IGraphics2D graphics;
+        private readonly InputBuffer input;
 
         private long animationLastTick = DateTime.MinValue.Ticks;
         private byte backgroundColor = 0;
@@ -24,9 +26,12 @@ namespace GameFromScratch.App.Gameplay
         private Vector2 spinningRectanglePos = new Vector2(300, 100);
         private float spinningRectangleAngle = 0f;
 
-        public TestAnimation(IGraphics2D graphics)
+        private Vector2 playerPos = new Vector2(333, 333);
+
+        public TestAnimation(IGraphics2D graphics, InputBuffer input)
         {
             this.graphics = graphics;
+            this.input = input;
         }
 
         public void Update()
@@ -36,6 +41,7 @@ namespace GameFromScratch.App.Gameplay
             AnimateCircle();
             AnimateTriangle();
             AnimateSpinningRectangle();
+            AnimatePlayer();
 
             graphics.Commit();
         }
@@ -90,6 +96,35 @@ namespace GameFromScratch.App.Gameplay
             spinningRectangleAngle += 0.01f;
             var rectangleCenter = spinningRectanglePos + new Vector2(25, 25);
             graphics.DrawRectangleRotated(spinningRectanglePos, 50, 50, Color.Beige, spinningRectangleAngle, rectangleCenter);
+        }
+
+        private void AnimatePlayer()
+        {
+            var dx = 0;
+            var dy = 0;
+            var speed = 5;
+            if (input.IsDown(KeyCode.W))
+            {
+                dy = -speed;
+            }
+
+            if (input.IsDown(KeyCode.A))
+            {
+                dx = -speed;
+            }
+
+            if (input.IsDown(KeyCode.S))
+            {
+                dy = speed;
+            }
+
+            if (input.IsDown(KeyCode.D))
+            {
+                dx = speed;
+            }
+            playerPos += new Vector2(dx, dy);
+
+            graphics.DrawCircle(playerPos, 50, Color.Cyan);
         }
     }
 }

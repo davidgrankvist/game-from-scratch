@@ -20,7 +20,7 @@ namespace GameFromScratch.App.Gameplay
             this.graphics = graphics;
             fpsThrottler = new FpsThrottler();
 
-            testAnimation = new TestAnimation(graphics);
+            testAnimation = new TestAnimation(graphics, windowManager.Input);
             fpsSampler = new FpsSampler(100);
         }
 
@@ -38,7 +38,6 @@ namespace GameFromScratch.App.Gameplay
                 }
 
                 Update();
-
                 PrintFps();
             }
         }

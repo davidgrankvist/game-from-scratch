@@ -19,3 +19,5 @@ GetClientRect
 PeekMessage
 WM_QUIT
 InvalidateRect
+WM_KEYDOWN
+WM_KEYUP
