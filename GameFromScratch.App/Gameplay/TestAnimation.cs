@@ -42,6 +42,7 @@ namespace GameFromScratch.App.Gameplay
             AnimateTriangle();
             AnimateSpinningRectangle();
             AnimatePlayer();
+            TestPressedReleased();
 
             graphics.Commit();
         }
@@ -125,6 +126,19 @@ namespace GameFromScratch.App.Gameplay
             playerPos += new Vector2(dx, dy);
 
             graphics.DrawCircle(playerPos, 50, Color.Cyan);
+        }
+
+        private void TestPressedReleased()
+        {
+            if (input.IsPressed(KeyCode.A))
+            {
+                Console.WriteLine("Pressed A");
+            }
+
+            if (input.IsReleased(KeyCode.A))
+            {
+                Console.WriteLine("Released A");
+            }
         }
     }
 }

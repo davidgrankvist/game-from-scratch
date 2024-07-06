@@ -39,6 +39,8 @@ namespace GameFromScratch.App.Gameplay
 
                 Update();
                 PrintFps();
+
+                windowManager.Input.Refresh();
             }
         }
 

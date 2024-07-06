@@ -49,10 +49,5 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     return null;
             }
         }
-
-        private void SetKeyState(KeyCode key, bool isDown)
-        {
-            buffer[(int)key] = isDown;
-        }
     }
 }
