@@ -12,8 +12,8 @@
             isKeyPrevDown = new bool[numKeyCodes];
         }
 
-        // make buffer operations protected so that the platform code can access them
-        protected void SetKeyState(KeyCode key, bool isDown)
+        // make buffer operations public so that the platform code can access them
+        public void SetKeyState(KeyCode key, bool isDown)
         {
             isKeyDown[(int)key] = isDown;
         }

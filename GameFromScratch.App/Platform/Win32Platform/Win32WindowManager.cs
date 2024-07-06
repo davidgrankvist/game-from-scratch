@@ -10,8 +10,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
     [SupportedOSPlatform("windows7.0")]
     internal class Win32WindowManager : IWindowManager
     {
-        private IWin32Graphics2D graphics;
-        private Win32InputBuffer inputBuffer;
+        private readonly IWin32Graphics2D graphics;
+        private readonly Win32InputHandler inputHandler;
+        private readonly InputBuffer inputBuffer;
         private bool isRunning;
         private WNDPROC? wndProc; // Prevent window procedure delegate from being garbage collected
 
@@ -21,7 +22,8 @@ namespace GameFromScratch.App.Platform.Win32Platform
         public Win32WindowManager(IWin32Graphics2D graphics)
         {
             this.graphics = graphics;
-            inputBuffer = new Win32InputBuffer();
+            inputBuffer = new InputBuffer();
+            inputHandler = new Win32InputHandler(inputBuffer);
         }
 
         public unsafe void CreateWindow()
@@ -98,10 +100,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     // Do nothing as painting is handled by the rendering code
                     break;
                 case PInvoke.WM_KEYDOWN:
-                    inputBuffer.HandleKeyDown((byte)wParam, (int)lParam);
+                    inputHandler.HandleKeyDown((byte)wParam, (int)lParam);
                     break;
                 case PInvoke.WM_KEYUP:
-                    inputBuffer.HandleKeyUp((byte)wParam, (int)lParam);
+                    inputHandler.HandleKeyUp((byte)wParam, (int)lParam);
                     break;
                 default:
                     return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);

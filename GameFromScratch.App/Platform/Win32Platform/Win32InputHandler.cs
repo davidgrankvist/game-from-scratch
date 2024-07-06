@@ -4,8 +4,14 @@ using System.Runtime.Versioning;
 namespace GameFromScratch.App.Platform.Win32Platform
 {
     [SupportedOSPlatform("windows7.0")]
-    internal class Win32InputBuffer : InputBuffer
+    internal class Win32InputHandler
     {
+        private readonly InputBuffer inputBuffer;
+
+        public Win32InputHandler(InputBuffer buffer)
+        {
+            this.inputBuffer = buffer;
+        }
         public void HandleKeyDown(byte vk, int state)
         {
             var key = ToKeyCode(vk);
@@ -14,7 +20,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 return;
             }
 
-            SetKeyState(key.Value, true);
+            inputBuffer.SetKeyState(key.Value, true);
         }
 
         public void HandleKeyUp(byte vk, int state)
@@ -25,7 +31,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 return;
             }
 
-            SetKeyState(key.Value, false);
+            inputBuffer.SetKeyState(key.Value, false);
         }
 
         /*
