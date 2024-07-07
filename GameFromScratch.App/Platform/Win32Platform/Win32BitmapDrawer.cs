@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using System.Runtime.Versioning;
+using GameFromScratch.App.Framework.Maths;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
@@ -96,24 +97,23 @@ namespace GameFromScratch.App.Platform.Win32Platform
             return y * Width + x;
         }
 
-        private static int ToNearestPixel(float f)
+        private static Vector2Int ToNearestPixel(Vector2 position)
         {
-            return (int)(f + 0.5);
+            var px = (int)(position.X + 0.5);
+            var py = (int)(position.Y + 0.5);
+            return new Vector2Int(px, py);
         }
 
         public void DrawRectangle(Vector2 position, float width, float height, Color color)
         {
-            // x/y components of corners
-            var px = ToNearestPixel(position.X);
-            var py = ToNearestPixel(position.Y);
-            var pw = ToNearestPixel(position.X + width);
-            var ph = ToNearestPixel(position.Y + height);
+            var topLeftPixel = ToNearestPixel(position);
+            var bottomRightPixel = ToNearestPixel(position + new Vector2(width, height));
 
             // visible part of rectangle
-            var pxStart = Math.Max(px, 0);
-            var pxEnd = Math.Min(pw, Width);
-            var pyStart = Math.Max(py, 0);
-            var pyEnd = Math.Min(ph, Height);
+            var pxStart = Math.Max(topLeftPixel.X, 0);
+            var pxEnd = Math.Min(bottomRightPixel.X, Width);
+            var pyStart = Math.Max(topLeftPixel.Y, 0);
+            var pyEnd = Math.Min(bottomRightPixel.Y, Height);
 
             for (var ix = pxStart; ix < pxEnd; ix++)
             {
@@ -126,29 +126,24 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void DrawCircle(Vector2 position, float radius, Color color)
         {
-            // center
-            var cx = ToNearestPixel(position.X);
-            var cy = ToNearestPixel(position.Y);
+            var centerPixel = ToNearestPixel(position);
 
-            // bounding box
-            var px = ToNearestPixel(position.X - radius);
-            var py = ToNearestPixel(position.Y - radius);
-            var pw = ToNearestPixel(px + 2 * radius);
-            var ph = ToNearestPixel(py + 2 * radius);
+            var boundingBoxTopLeft = ToNearestPixel(position - new Vector2(radius, radius));
+            var boundingBoxBottomRight = ToNearestPixel(new Vector2(boundingBoxTopLeft.X + 2 * radius, boundingBoxTopLeft.Y + 2 * radius));
 
             // visible part of bounding box
-            var pxStart = Math.Max(px, 0);
-            var pxEnd = Math.Min(pw, Width);
-            var pyStart = Math.Max(py, 0);
-            var pyEnd = Math.Min(ph, Height);
+            var pxStart = Math.Max(boundingBoxTopLeft.X, 0);
+            var pxEnd = Math.Min(boundingBoxBottomRight.X, Width);
+            var pyStart = Math.Max(boundingBoxTopLeft.Y, 0);
+            var pyEnd = Math.Min(boundingBoxBottomRight.Y, Height);
 
             // color pixels where the distance from the center is at most the radius
             for (var ix = pxStart; ix < pxEnd; ix++)
             {
-                var dx = (ix - cx);
+                var dx = (ix - centerPixel.X);
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var dy = (iy - cy);
+                    var dy = (iy - centerPixel.Y);
                     var squaredDistance = dx * dx + dy * dy;
 
                     if (squaredDistance <= radius * radius)
@@ -161,21 +156,15 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color)
         {
-            // pixel coordinates
-            var apx = ToNearestPixel(a.X);
-            var apy = ToNearestPixel(a.Y);
-
-            var bpx = ToNearestPixel(b.X);
-            var bpy = ToNearestPixel(b.Y);
-
-            var cpx = ToNearestPixel(c.X);
-            var cpy = ToNearestPixel(c.Y);
+            var pixelA = ToNearestPixel(a);
+            var pixelB = ToNearestPixel(b);
+            var pixelC = ToNearestPixel(c);
 
             // bounding box
-            var pxMin = Math.Min(Math.Min(apx, bpx), cpx);
-            var pxMax = Math.Max(Math.Max(apx, bpx), cpx);
-            var pyMin = Math.Min(Math.Min(apy, bpy), cpy);
-            var pyMax = Math.Max(Math.Max(apy, bpy), cpy);
+            var pxMin = Math.Min(Math.Min(pixelA.X, pixelB.X), pixelC.X);
+            var pxMax = Math.Max(Math.Max(pixelA.X, pixelB.X), pixelC.X);
+            var pyMin = Math.Min(Math.Min(pixelA.Y, pixelB.Y), pixelC.Y);
+            var pyMax = Math.Max(Math.Max(pixelA.Y, pixelB.Y), pixelC.Y);
 
             // visible part of bounding box
             var pxStart = Math.Min(pxMin, 0);
@@ -249,24 +238,16 @@ namespace GameFromScratch.App.Platform.Win32Platform
         // TODO(improvement): very similar to triangle code - generalize?
         private void DrawRectangleByPoints(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color)
         {
-            // pixel coordinates
-            var apx = ToNearestPixel(a.X);
-            var apy = ToNearestPixel(a.Y);
-
-            var bpx = ToNearestPixel(b.X);
-            var bpy = ToNearestPixel(b.Y);
-
-            var cpx = ToNearestPixel(c.X);
-            var cpy = ToNearestPixel(c.Y);
-
-            var dpx = ToNearestPixel(d.X);
-            var dpy = ToNearestPixel(d.Y);
+            var pixelA = ToNearestPixel(a);
+            var pixelB = ToNearestPixel(b);
+            var pixelC = ToNearestPixel(c);
+            var pixelD = ToNearestPixel(d);
 
             // bounding box
-            var pxMin = Math.Min(Math.Min(apx, bpx), Math.Min(cpx, dpx));
-            var pxMax = Math.Max(Math.Max(apx, bpx), Math.Max(cpx, dpx));
-            var pyMin = Math.Min(Math.Min(apy, bpy), Math.Min(cpy, dpy));
-            var pyMax = Math.Max(Math.Max(apy, bpy), Math.Max(cpy, dpy));
+            var pxMin = Math.Min(Math.Min(pixelA.X, pixelB.X), Math.Min(pixelC.X, pixelD.X));
+            var pxMax = Math.Max(Math.Max(pixelA.X, pixelB.X), Math.Max(pixelC.X, pixelD.X));
+            var pyMin = Math.Min(Math.Min(pixelA.Y, pixelB.Y), Math.Min(pixelC.Y, pixelD.Y));
+            var pyMax = Math.Max(Math.Max(pixelA.Y, pixelB.Y), Math.Max(pixelC.Y, pixelD.Y));
 
             // visible part of bounding box
             var pxStart = Math.Min(pxMin, 0);
