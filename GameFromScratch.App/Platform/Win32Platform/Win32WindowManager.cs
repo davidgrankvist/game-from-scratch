@@ -94,6 +94,8 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         private LRESULT WindowProcedure(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
+            var wParamUint = (uint)wParam;
+            var lParamInt = (int)lParam;
             switch (msg)
             {
                 case PInvoke.WM_SIZE:
@@ -107,10 +109,22 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     // Do nothing as painting is handled by the rendering code
                     break;
                 case PInvoke.WM_KEYDOWN:
-                    inputHandler.HandleKeyDown((byte)wParam, (int)lParam);
+                    inputHandler.HandleKeyDown(wParamUint, lParamInt);
                     break;
                 case PInvoke.WM_KEYUP:
-                    inputHandler.HandleKeyUp((byte)wParam, (int)lParam);
+                    inputHandler.HandleKeyUp(wParamUint, lParamInt);
+                    break;
+                case PInvoke.WM_LBUTTONDOWN:
+                    inputHandler.HandleMouseLeftDown(wParamUint, lParamInt);
+                    break;
+                case PInvoke.WM_LBUTTONUP:
+                    inputHandler.HandleMouseLeftUp(wParamUint, lParamInt);
+                    break;
+                case PInvoke.WM_RBUTTONDOWN:
+                    inputHandler.HandleMouseRightDown(wParamUint, lParamInt);
+                    break;
+                case PInvoke.WM_RBUTTONUP:
+                    inputHandler.HandleMouseRightUp(wParamUint, lParamInt);
                     break;
                 default:
                     return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);

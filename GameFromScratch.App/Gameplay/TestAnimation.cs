@@ -47,6 +47,7 @@ namespace GameFromScratch.App.Gameplay
             AnimatePlayer();
             TestPressedReleased();
             TestViewport();
+            TestMouse();
 
             graphics.Commit();
         }
@@ -148,6 +149,26 @@ namespace GameFromScratch.App.Gameplay
         private void TestViewport()
         {
             camera.SetViewport(-100, 0);
+        }
+
+        private void TestMouse()
+        {
+            if (input.IsPressed(KeyCode.MouseLeft))
+            {
+                Console.WriteLine("Pressed mouse left");
+            }
+            if (input.IsReleased(KeyCode.MouseLeft))
+            {
+                Console.WriteLine("Released mouse left");
+            }
+            if (input.IsPressed(KeyCode.MouseRight))
+            {
+                Console.WriteLine("Pressed mouse right");
+            }
+            if (input.IsReleased(KeyCode.MouseRight))
+            {
+                Console.WriteLine("Released mouse right");
+            }
         }
     }
 }
