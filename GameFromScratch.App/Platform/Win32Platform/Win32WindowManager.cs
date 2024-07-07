@@ -1,5 +1,6 @@
 using System.Runtime.Versioning;
 using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Fps;
 using GameFromScratch.App.Framework.Input;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -13,17 +14,20 @@ namespace GameFromScratch.App.Platform.Win32Platform
         private readonly IWin32Graphics2D graphics;
         private readonly Win32InputHandler inputHandler;
         private readonly InputBuffer inputBuffer;
+        private readonly Win32Sleeper sleeper;
         private bool isRunning;
         private WNDPROC? wndProc; // Prevent window procedure delegate from being garbage collected
 
         public bool IsRunning { get => isRunning; }
         public InputBuffer Input { get => inputBuffer; }
+        public ISleeper Sleeper { get => sleeper; }
 
         public Win32WindowManager(IWin32Graphics2D graphics)
         {
             this.graphics = graphics;
             inputBuffer = new InputBuffer();
             inputHandler = new Win32InputHandler(inputBuffer);
+            sleeper = new Win32Sleeper();
         }
 
         public unsafe void CreateWindow()
@@ -68,6 +72,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
             }
 
             isRunning = true;
+
+            // make sure Thread.Sleep can handle 1ms delays
+            sleeper.Initialize(1);
         }
 
         public void ProcessMessage()

@@ -1,37 +1,35 @@
-﻿namespace GameFromScratch.App.Framework.Fps
+﻿using System.Diagnostics;
+
+namespace GameFromScratch.App.Framework.Fps
 {
     internal class FpsThrottler
     {
-        private const int DEFAULT_FPS = 60;
+        private readonly double targetMsPerFrame;
+        private readonly ISleeper sleeper;
+        private readonly Stopwatch stopWatch;
 
-        private long lastTick;
-        private readonly double targetTicksPerFrame;
-
-        public FpsThrottler(int fps)
+        public FpsThrottler(int fps, ISleeper sleeper)
         {
-            targetTicksPerFrame = GetTargetTicksPerFrame(fps);
-            lastTick = DateTime.MinValue.Ticks;
+            targetMsPerFrame = GetTargetMsPerFrame(fps);
+            this.sleeper = sleeper;
+            stopWatch = new Stopwatch();
         }
 
-        public FpsThrottler() : this(DEFAULT_FPS)
+        private static double GetTargetMsPerFrame(int fps)
         {
+            var targetTicksPerFrame = FpsConstants.TICKS_PER_SECOND / fps;
+            return targetTicksPerFrame / FpsConstants.MILLISECONDS_PER_TICK;
         }
 
-        private static double GetTargetTicksPerFrame(int fps)
+        public void SleepUntilNextFrame()
         {
-            return FpsConstants.TICKS_PER_SECOND / fps;
-        }
-
-        public bool PollIsReady()
-        {
-            var ellapsed = DateTime.UtcNow.Ticks - lastTick;
-            if (ellapsed < targetTicksPerFrame)
+            var sleepDelay = (int)(targetMsPerFrame - stopWatch.ElapsedMilliseconds);
+            if (sleepDelay > 0)
             {
-                return false;
+                sleeper.Sleep(sleepDelay);
             }
 
-            lastTick = DateTime.UtcNow.Ticks;
-            return true;
+            stopWatch.Restart();
         }
     }
 }

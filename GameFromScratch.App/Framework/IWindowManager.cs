@@ -1,4 +1,5 @@
-﻿using GameFromScratch.App.Framework.Input;
+﻿using GameFromScratch.App.Framework.Fps;
+using GameFromScratch.App.Framework.Input;
 
 namespace GameFromScratch.App.Framework
 {
@@ -11,5 +12,7 @@ namespace GameFromScratch.App.Framework
         public void ProcessMessage();
 
         public InputBuffer Input { get; }
+
+        public ISleeper Sleeper { get; }
     }
 }

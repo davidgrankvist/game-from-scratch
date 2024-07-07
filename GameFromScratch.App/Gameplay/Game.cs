@@ -18,7 +18,7 @@ namespace GameFromScratch.App.Gameplay
         {
             this.windowManager = windowManager;
             this.graphics = graphics;
-            fpsThrottler = new FpsThrottler();
+            fpsThrottler = new FpsThrottler(60, windowManager.Sleeper);
 
             testAnimation = new TestAnimation(graphics, windowManager.Input);
             fpsSampler = new FpsSampler(100);
@@ -31,11 +31,7 @@ namespace GameFromScratch.App.Gameplay
             while (windowManager.IsRunning)
             {
                 windowManager.ProcessMessage();
-
-                if (!fpsThrottler.PollIsReady())
-                {
-                    continue;
-                }
+                fpsThrottler.SleepUntilNextFrame();
 
                 Update();
                 PrintFps();
