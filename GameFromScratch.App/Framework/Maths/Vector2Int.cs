@@ -1,4 +1,6 @@
-﻿namespace GameFromScratch.App.Framework.Maths
+﻿using System.Numerics;
+
+namespace GameFromScratch.App.Framework.Maths
 {
     public readonly struct Vector2Int
     {
@@ -25,6 +27,11 @@
         public static Vector2Int operator -(Vector2Int left, Vector2Int right)
         {
             return new Vector2Int(left.X - right.X, left.Y - right.Y);
+        }
+
+        public Vector2 ToVector2()
+        {
+            return new Vector2(X, Y);
         }
     }
 }

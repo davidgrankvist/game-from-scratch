@@ -19,6 +19,14 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public HWND Hwnd { get; set; }
 
+        private Vector2 viewportTopLeft;
+        // TODO(feature): add scaling factor so that world units can differ from pixels
+
+        public Win32BitmapDrawer()
+        {
+            viewportTopLeft = Vector2.Zero;
+        }
+
         public unsafe void Resize(int width, int height)
         {
             // 3 colors + 1 byte padding = 32 bits
@@ -82,6 +90,11 @@ namespace GameFromScratch.App.Platform.Win32Platform
          * TODO(improvement): Separate rendering parts below from the Win32 bitmap specifics
          */
 
+        public void SetViewport(float x, float y)
+        {
+            viewportTopLeft = new Vector2(x, y);
+        }
+
         public void Fill(Color color)
         {
             Array.Fill(bitmap, color.ToArgb());
@@ -97,17 +110,26 @@ namespace GameFromScratch.App.Platform.Win32Platform
             return y * Width + x;
         }
 
-        private static Vector2Int ToNearestPixel(Vector2 position)
+        private Vector2Int ToPixel(Vector2 worldPosition)
         {
-            var px = (int)(position.X + 0.5);
-            var py = (int)(position.Y + 0.5);
+            // translate so that the top left pixel matches the viewport
+            var pixelPosition = worldPosition - viewportTopLeft;
+            // round to nearest pixel
+            var px = (int)(pixelPosition.X + 0.5);
+            var py = (int)(pixelPosition.Y + 0.5);
             return new Vector2Int(px, py);
+        }
+
+        private Vector2 FromPixel(Vector2Int pixelPosition)
+        {
+            var worldPosition = pixelPosition.ToVector2() + viewportTopLeft;
+            return worldPosition;
         }
 
         public void DrawRectangle(Vector2 position, float width, float height, Color color)
         {
-            var topLeftPixel = ToNearestPixel(position);
-            var bottomRightPixel = ToNearestPixel(position + new Vector2(width, height));
+            var topLeftPixel = ToPixel(position);
+            var bottomRightPixel = ToPixel(position + new Vector2(width, height));
 
             // visible part of rectangle
             var pxStart = Math.Max(topLeftPixel.X, 0);
@@ -126,10 +148,8 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void DrawCircle(Vector2 position, float radius, Color color)
         {
-            var centerPixel = ToNearestPixel(position);
-
-            var boundingBoxTopLeft = ToNearestPixel(position - new Vector2(radius, radius));
-            var boundingBoxBottomRight = ToNearestPixel(new Vector2(boundingBoxTopLeft.X + 2 * radius, boundingBoxTopLeft.Y + 2 * radius));
+            var boundingBoxTopLeft = ToPixel(position - new Vector2(radius, radius));
+            var boundingBoxBottomRight = ToPixel(position + new Vector2(radius, radius));
 
             // visible part of bounding box
             var pxStart = Math.Max(boundingBoxTopLeft.X, 0);
@@ -138,14 +158,14 @@ namespace GameFromScratch.App.Platform.Win32Platform
             var pyEnd = Math.Min(boundingBoxBottomRight.Y, Height);
 
             // color pixels where the distance from the center is at most the radius
+            //var centerPixel = ToNearestPixel(position);
             for (var ix = pxStart; ix < pxEnd; ix++)
             {
-                var dx = (ix - centerPixel.X);
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var dy = (iy - centerPixel.Y);
-                    var squaredDistance = dx * dx + dy * dy;
+                    var delta = FromPixel(new Vector2Int(ix, iy)) - position;
 
+                    var squaredDistance = delta.X * delta.X + delta.Y * delta.Y;
                     if (squaredDistance <= radius * radius)
                     {
                         SetPixel(ix, iy, color);
@@ -156,9 +176,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color)
         {
-            var pixelA = ToNearestPixel(a);
-            var pixelB = ToNearestPixel(b);
-            var pixelC = ToNearestPixel(c);
+            var pixelA = ToPixel(a);
+            var pixelB = ToPixel(b);
+            var pixelC = ToPixel(c);
 
             // bounding box
             var pxMin = MathExtensions.Min(pixelA.X, pixelB.X, pixelC.X);
@@ -181,7 +201,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
             {
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var p = new Vector2(ix, iy);
+                    var p = FromPixel(new Vector2Int(ix, iy));
                     /*
                      * Walking around the triangle, p should be either to your left or right
                      * the entire time. If it switches back and forth, it can't be in the triangle.
@@ -221,10 +241,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
         // TODO(improvement): very similar to triangle code - generalize?
         private void DrawRectangleByPoints(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color)
         {
-            var pixelA = ToNearestPixel(a);
-            var pixelB = ToNearestPixel(b);
-            var pixelC = ToNearestPixel(c);
-            var pixelD = ToNearestPixel(d);
+            var pixelA = ToPixel(a);
+            var pixelB = ToPixel(b);
+            var pixelC = ToPixel(c);
+            var pixelD = ToPixel(d);
 
             // bounding box
             var pxMin = MathExtensions.Min(pixelA.X, pixelB.X, pixelC.X, pixelD.X);
@@ -248,7 +268,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
             {
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var p = new Vector2(ix, iy);
+                    var p = FromPixel(new Vector2Int(ix, iy));
                     /*
                      * Walking around the edges, p should be either to your left or right
                      * the entire time. If it switches back and forth, it can't be in the area.

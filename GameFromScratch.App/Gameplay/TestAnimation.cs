@@ -43,6 +43,7 @@ namespace GameFromScratch.App.Gameplay
             AnimateSpinningRectangle();
             AnimatePlayer();
             TestPressedReleased();
+            TestViewport();
 
             graphics.Commit();
         }
@@ -139,6 +140,11 @@ namespace GameFromScratch.App.Gameplay
             {
                 Console.WriteLine("Released A");
             }
+        }
+
+        private void TestViewport()
+        {
+            graphics.SetViewport(-100, 0);
         }
     }
 }
