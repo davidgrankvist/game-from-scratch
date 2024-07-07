@@ -161,10 +161,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
             var pixelC = ToNearestPixel(c);
 
             // bounding box
-            var pxMin = Math.Min(Math.Min(pixelA.X, pixelB.X), pixelC.X);
-            var pxMax = Math.Max(Math.Max(pixelA.X, pixelB.X), pixelC.X);
-            var pyMin = Math.Min(Math.Min(pixelA.Y, pixelB.Y), pixelC.Y);
-            var pyMax = Math.Max(Math.Max(pixelA.Y, pixelB.Y), pixelC.Y);
+            var pxMin = MathExtensions.Min(pixelA.X, pixelB.X, pixelC.X);
+            var pxMax = MathExtensions.Max(pixelA.X, pixelB.X, pixelC.X);
+            var pyMin = MathExtensions.Min(pixelA.Y, pixelB.Y, pixelC.Y);
+            var pyMax = MathExtensions.Max(pixelA.Y, pixelB.Y, pixelC.Y);
 
             // visible part of bounding box
             var pxStart = Math.Min(pxMin, 0);
@@ -188,9 +188,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
                      *
                      * The cross product determines the orientation for the "to the left/right" checks.
                      */
-                    var isInTriangle = CrossProduct(ab, p - a) >= 0
-                        && CrossProduct(bc, p - b) >= 0
-                        && CrossProduct(ca, p - c) >= 0;
+                    var isInTriangle = VectorMath.CrossProduct(ab, p - a) >= 0
+                        && VectorMath.CrossProduct(bc, p - b) >= 0
+                        && VectorMath.CrossProduct(ca, p - c) >= 0;
 
                     if (isInTriangle)
                     {
@@ -198,11 +198,6 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     }
                 }
             }
-        }
-
-        private static float CrossProduct(Vector2 a, Vector2 b)
-        {
-            return a.X * b.Y - a.Y * b.X;
         }
 
         public void DrawRectangleRotated(Vector2 position, float width, float height,  Color color, float angle, Vector2 origin)
@@ -214,25 +209,13 @@ namespace GameFromScratch.App.Platform.Win32Platform
             var bottomRight = position + new Vector2(width, height);
 
             // rotated corners
-            var topLeftRotated = RotatePoint(topLeft, angle, origin);
-            var topRightRotated = RotatePoint(topRight, angle, origin);
-            var bottomLeftRotated = RotatePoint(bottomLeft, angle, origin);
-            var bottomRightRotated = RotatePoint(bottomRight, angle, origin);
+            var topLeftRotated = VectorMath.RotatePoint(topLeft, angle, origin);
+            var topRightRotated = VectorMath.RotatePoint(topRight, angle, origin);
+            var bottomLeftRotated = VectorMath.RotatePoint(bottomLeft, angle, origin);
+            var bottomRightRotated = VectorMath.RotatePoint(bottomRight, angle, origin);
 
             // draw the rectangle
             DrawRectangleByPoints(topLeftRotated, topRightRotated, bottomRightRotated, bottomLeftRotated, color);
-        }
-
-        private static Vector2 RotatePoint(Vector2 point, float angle, Vector2 origin)
-        {
-            var sin = MathF.Sin(angle);
-            var cos = MathF.Cos(angle);
-
-            var translated = point - origin;
-            var rotated = new Vector2(translated.X * cos - translated.Y * sin, translated.X * sin + translated.Y * cos);
-            var result = rotated + origin;
-
-            return result;
         }
 
         // TODO(improvement): very similar to triangle code - generalize?
@@ -244,10 +227,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
             var pixelD = ToNearestPixel(d);
 
             // bounding box
-            var pxMin = Math.Min(Math.Min(pixelA.X, pixelB.X), Math.Min(pixelC.X, pixelD.X));
-            var pxMax = Math.Max(Math.Max(pixelA.X, pixelB.X), Math.Max(pixelC.X, pixelD.X));
-            var pyMin = Math.Min(Math.Min(pixelA.Y, pixelB.Y), Math.Min(pixelC.Y, pixelD.Y));
-            var pyMax = Math.Max(Math.Max(pixelA.Y, pixelB.Y), Math.Max(pixelC.Y, pixelD.Y));
+            var pxMin = MathExtensions.Min(pixelA.X, pixelB.X, pixelC.X, pixelD.X);
+            var pxMax = MathExtensions.Max(pixelA.X, pixelB.X, pixelC.X, pixelD.X);
+            var pyMin = MathExtensions.Min(pixelA.Y, pixelB.Y, pixelC.Y, pixelD.Y);
+            var pyMax = MathExtensions.Max(pixelA.Y, pixelB.Y, pixelC.Y, pixelD.Y);
 
             // visible part of bounding box
             var pxStart = Math.Min(pxMin, 0);
@@ -272,10 +255,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
                      *
                      * The cross product determines the orientation for the "to the left/right" checks.
                      */
-                    var isInRectangle = CrossProduct(ab, p - a) >= 0
-                        && CrossProduct(bc, p - b) >= 0
-                        && CrossProduct(cd, p - c) >= 0
-                        && CrossProduct(da, p - d) >= 0;
+                    var isInRectangle = VectorMath.CrossProduct(ab, p - a) >= 0
+                        && VectorMath.CrossProduct(bc, p - b) >= 0
+                        && VectorMath.CrossProduct(cd, p - c) >= 0
+                        && VectorMath.CrossProduct(da, p - d) >= 0;
 
                     if (isInRectangle)
                     {
