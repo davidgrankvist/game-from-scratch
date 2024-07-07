@@ -6,14 +6,14 @@ namespace GameFromScratch.App.Platform
 {
     internal static class PlatformManager
     {
-        public static IGraphics2D GetGraphics2D(RendererType rendererType)
+        public static IGraphics2D GetGraphics2D(RendererType rendererType, Camera2D camera)
         {
             if (OperatingSystem.IsWindowsVersionAtLeast(7))
             {
                 switch (rendererType)
                 {
                     case RendererType.SoftwareRenderer:
-                        return new Win32BitmapDrawer();
+                        return new Win32BitmapDrawer(camera);
                     default:
                         throw new PlatformNotSupportedException($"Unsupported renderer type {rendererType}");
                 }

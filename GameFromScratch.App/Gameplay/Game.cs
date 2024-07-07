@@ -15,13 +15,13 @@ namespace GameFromScratch.App.Gameplay
 
         private const bool debugMode = false;
 
-        public Game(IWindowManager windowManager, IGraphics2D graphics)
+        public Game(IWindowManager windowManager, IGraphics2D graphics, Camera2D camera)
         {
             this.windowManager = windowManager;
             this.graphics = graphics;
             fpsThrottler = new FpsThrottler(60, windowManager.Sleeper);
 
-            testAnimation = new TestAnimation(graphics, windowManager.Input);
+            testAnimation = new TestAnimation(graphics, windowManager.Input, camera);
             fpsSampler = new FpsSampler(100);
         }
 

@@ -1,4 +1,5 @@
-﻿using GameFromScratch.App.Framework.Graphics;
+﻿using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Framework.Input;
 using System.Drawing;
 using System.Numerics;
@@ -9,6 +10,7 @@ namespace GameFromScratch.App.Gameplay
     {
         private readonly IGraphics2D graphics;
         private readonly InputBuffer input;
+        private readonly Camera2D camera;
 
         private long animationLastTick = DateTime.MinValue.Ticks;
         private byte backgroundColor = 0;
@@ -28,10 +30,11 @@ namespace GameFromScratch.App.Gameplay
 
         private Vector2 playerPos = new Vector2(333, 333);
 
-        public TestAnimation(IGraphics2D graphics, InputBuffer input)
+        public TestAnimation(IGraphics2D graphics, InputBuffer input, Camera2D camera)
         {
             this.graphics = graphics;
             this.input = input;
+            this.camera = camera;
         }
 
         public void Update()
@@ -144,7 +147,7 @@ namespace GameFromScratch.App.Gameplay
 
         private void TestViewport()
         {
-            graphics.SetViewport(-100, 0);
+            camera.SetViewport(-100, 0);
         }
     }
 }

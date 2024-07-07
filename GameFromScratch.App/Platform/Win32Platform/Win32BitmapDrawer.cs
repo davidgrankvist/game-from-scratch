@@ -1,4 +1,5 @@
-﻿using GameFromScratch.App.Framework.Graphics;
+﻿using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Graphics;
 using System.Runtime.Versioning;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -11,6 +12,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
     {
         private BITMAPINFO bitmapInfo;
         public HWND Hwnd { get; set; }
+
+        public Win32BitmapDrawer(Camera2D camera) : base(camera)
+        {
+        }
 
         public override unsafe void Resize(int width, int height)
         {

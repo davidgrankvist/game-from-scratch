@@ -9,12 +9,12 @@ namespace GameFromScratch.App.Framework.Graphics
         protected int[] bitmap;
         protected int Width;
         protected int Height;
-        private Vector2 viewportTopLeft;
-        // TODO(feature): add scaling factor so that world units can differ from pixels
 
-        public SoftwareRenderer2D()
+        private Camera2D camera;
+
+        public SoftwareRenderer2D(Camera2D camera)
         {
-            viewportTopLeft = Vector2.Zero;
+            this.camera = camera;
         }
 
         public virtual void Resize(int width, int height)
@@ -27,11 +27,6 @@ namespace GameFromScratch.App.Framework.Graphics
 
         // implement in platform code
         public abstract void Commit();
-
-        public void SetViewport(float x, float y)
-        {
-            viewportTopLeft = new Vector2(x, y);
-        }
 
         public void Fill(Color color)
         {
@@ -48,26 +43,10 @@ namespace GameFromScratch.App.Framework.Graphics
             return y * Width + x;
         }
 
-        private Vector2Int ToPixel(Vector2 worldPosition)
-        {
-            // translate so that the top left pixel matches the viewport
-            var pixelPosition = worldPosition - viewportTopLeft;
-            // round to nearest pixel
-            var px = (int)(pixelPosition.X + 0.5);
-            var py = (int)(pixelPosition.Y + 0.5);
-            return new Vector2Int(px, py);
-        }
-
-        private Vector2 FromPixel(Vector2Int pixelPosition)
-        {
-            var worldPosition = pixelPosition.ToVector2() + viewportTopLeft;
-            return worldPosition;
-        }
-
         public void DrawRectangle(Vector2 position, float width, float height, Color color)
         {
-            var topLeftPixel = ToPixel(position);
-            var bottomRightPixel = ToPixel(position + new Vector2(width, height));
+            var topLeftPixel = camera.ToPixel(position);
+            var bottomRightPixel = camera.ToPixel(position + new Vector2(width, height));
 
             // visible part of rectangle
             var pxStart = Math.Max(topLeftPixel.X, 0);
@@ -86,8 +65,8 @@ namespace GameFromScratch.App.Framework.Graphics
 
         public void DrawCircle(Vector2 position, float radius, Color color)
         {
-            var boundingBoxTopLeft = ToPixel(position - new Vector2(radius, radius));
-            var boundingBoxBottomRight = ToPixel(position + new Vector2(radius, radius));
+            var boundingBoxTopLeft = camera.ToPixel(position - new Vector2(radius, radius));
+            var boundingBoxBottomRight = camera.ToPixel(position + new Vector2(radius, radius));
 
             // visible part of bounding box
             var pxStart = Math.Max(boundingBoxTopLeft.X, 0);
@@ -100,7 +79,7 @@ namespace GameFromScratch.App.Framework.Graphics
             {
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var delta = FromPixel(new Vector2Int(ix, iy)) - position;
+                    var delta = camera.FromPixel(new Vector2Int(ix, iy)) - position;
 
                     var squaredDistance = delta.X * delta.X + delta.Y * delta.Y;
                     if (squaredDistance <= radius * radius)
@@ -113,9 +92,9 @@ namespace GameFromScratch.App.Framework.Graphics
 
         public void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color)
         {
-            var pixelA = ToPixel(a);
-            var pixelB = ToPixel(b);
-            var pixelC = ToPixel(c);
+            var pixelA = camera.ToPixel(a);
+            var pixelB = camera.ToPixel(b);
+            var pixelC = camera.ToPixel(c);
 
             // bounding box
             var pxMin = MathExtensions.Min(pixelA.X, pixelB.X, pixelC.X);
@@ -138,7 +117,7 @@ namespace GameFromScratch.App.Framework.Graphics
             {
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var p = FromPixel(new Vector2Int(ix, iy));
+                    var p = camera.FromPixel(new Vector2Int(ix, iy));
                     /*
                      * Walking around the triangle, p should be either to your left or right
                      * the entire time. If it switches back and forth, it can't be in the triangle.
@@ -178,10 +157,10 @@ namespace GameFromScratch.App.Framework.Graphics
         // TODO(improvement): very similar to triangle code - generalize?
         private void DrawRectangleByPoints(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color)
         {
-            var pixelA = ToPixel(a);
-            var pixelB = ToPixel(b);
-            var pixelC = ToPixel(c);
-            var pixelD = ToPixel(d);
+            var pixelA = camera.ToPixel(a);
+            var pixelB = camera.ToPixel(b);
+            var pixelC = camera.ToPixel(c);
+            var pixelD = camera.ToPixel(d);
 
             // bounding box
             var pxMin = MathExtensions.Min(pixelA.X, pixelB.X, pixelC.X, pixelD.X);
@@ -205,7 +184,7 @@ namespace GameFromScratch.App.Framework.Graphics
             {
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var p = FromPixel(new Vector2Int(ix, iy));
+                    var p = camera.FromPixel(new Vector2Int(ix, iy));
                     /*
                      * Walking around the edges, p should be either to your left or right
                      * the entire time. If it switches back and forth, it can't be in the area.

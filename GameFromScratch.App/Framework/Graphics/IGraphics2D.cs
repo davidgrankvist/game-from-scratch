@@ -9,8 +9,6 @@ namespace GameFromScratch.App.Framework.Graphics
 
         public void Commit();
 
-        public void SetViewport(float x, float y);
-
         public void Fill(Color color);
 
         public void DrawRectangle(Vector2 position, float width, float height, Color color);
