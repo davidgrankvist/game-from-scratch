@@ -187,9 +187,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
             var pyMax = MathExtensions.Max(pixelA.Y, pixelB.Y, pixelC.Y);
 
             // visible part of bounding box
-            var pxStart = Math.Min(pxMin, 0);
-            var pxEnd = Math.Max(pxMax, Width);
-            var pyStart = Math.Min(pyMin, 0);
+            var pxStart = Math.Max(pxMin, 0);
+            var pxEnd = Math.Min(pxMax, Width);
+            var pyStart = Math.Max(pyMin, 0);
             var pyEnd = Math.Min(pyMax, Height);
 
             // triangle edges
@@ -253,9 +253,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
             var pyMax = MathExtensions.Max(pixelA.Y, pixelB.Y, pixelC.Y, pixelD.Y);
 
             // visible part of bounding box
-            var pxStart = Math.Min(pxMin, 0);
-            var pxEnd = Math.Max(pxMax, Width);
-            var pyStart = Math.Min(pyMin, 0);
+            var pxStart = Math.Max(pxMin, 0);
+            var pxEnd = Math.Min(pxMax, Width);
+            var pyStart = Math.Max(pyMin, 0);
             var pyEnd = Math.Min(pyMax, Height);
 
             // edges
