@@ -1,5 +1,5 @@
-﻿using System.Runtime.Versioning;
-using GameFromScratch.App.Framework;
+﻿using GameFromScratch.App.Framework.Graphics;
+using System.Runtime.Versioning;
 using Windows.Win32.Foundation;
 
 namespace GameFromScratch.App.Platform.Win32Platform

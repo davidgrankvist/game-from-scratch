@@ -1,4 +1,4 @@
-﻿using GameFromScratch.App.Framework;
+﻿using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Framework.Input;
 using System.Drawing;
 using System.Numerics;

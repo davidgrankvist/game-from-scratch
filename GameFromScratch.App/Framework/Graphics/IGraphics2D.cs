@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 
-namespace GameFromScratch.App.Framework
+namespace GameFromScratch.App.Framework.Graphics
 {
     internal interface IGraphics2D
     {

@@ -1,4 +1,5 @@
 ﻿using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Platform.Win32Platform;
 
 namespace GameFromScratch.App.Platform

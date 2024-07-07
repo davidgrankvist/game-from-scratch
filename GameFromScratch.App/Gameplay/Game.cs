@@ -1,5 +1,6 @@
 ﻿using GameFromScratch.App.Framework;
 using GameFromScratch.App.Framework.Fps;
+using GameFromScratch.App.Framework.Graphics;
 
 namespace GameFromScratch.App.Gameplay
 {
