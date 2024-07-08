@@ -6,11 +6,19 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 {
     internal class DemoSystem : ISystem
     {
-        private float animatedObjectPosX = 0;
-        private float animatedObjectVx = 100f;
+        private float animatedObjectPosX;
+        private float animatedObjectVx;
 
-        private Vector2 playerPos = new Vector2(200, 200);
-        private float playerSpeed = 120f;
+        private Vector2 playerPos;
+        private readonly float playerSpeed;
+
+        public DemoSystem()
+        {
+            animatedObjectPosX = 0;
+            animatedObjectVx = 100f;
+            playerPos = new Vector2(200, 200);
+            playerSpeed = 120f;
+        }
 
         public void Initialize()
         {
@@ -23,9 +31,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             MovePlayer(context);
         }
 
-        private void DrawCursor(SimulationContext context)
+        private static void DrawCursor(SimulationContext context)
         {
-
             context.Tools.Graphics.DrawCircle(context.Tools.Input.MousePosition, 25, Color.Green);
         }
 

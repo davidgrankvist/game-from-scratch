@@ -13,7 +13,7 @@ DefWindowProc
 BeginPaint
 EndPaint
 StretchDIBits
-BI_RGB
+BI_COMPRESSION
 WM_SIZE
 GetClientRect
 PeekMessage

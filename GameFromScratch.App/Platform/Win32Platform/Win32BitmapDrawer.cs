@@ -53,7 +53,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
             {
                 fixed (void* pBitmap = bitmap)
                 {
-                    PInvoke.StretchDIBits(
+                    _ = PInvoke.StretchDIBits(
                         hdc,
                         0, 0, width, height,
                         0, 0, Width, Height,

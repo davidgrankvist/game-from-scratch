@@ -5,6 +5,7 @@ using System.Runtime.Versioning;
 namespace GameFromScratch.App.Platform.Win32Platform
 {
     [SupportedOSPlatform("windows7.0")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Predefined contract")]
     internal class Win32InputHandler
     {
         private readonly IInputBufferWriter inputBufferWriter;

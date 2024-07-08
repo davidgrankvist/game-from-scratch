@@ -10,11 +10,12 @@ namespace GameFromScratch.App.Framework.Graphics
         protected int Width;
         protected int Height;
 
-        private Camera2D camera;
+        private readonly Camera2D camera;
 
         public SoftwareRenderer2D(Camera2D camera)
         {
             this.camera = camera;
+            bitmap = Array.Empty<int>();
         }
 
         public virtual void Resize(int width, int height)

@@ -57,9 +57,12 @@ namespace GameFromScratch.App.Gameplay
         {
             if (debugMode)
             {
+#pragma warning disable CS0162 // Unreachable code detected
                 fpsSampler.Sample();
                 Console.WriteLine($"FPS: {fpsSampler.Fps}");
+#pragma warning restore CS0162 // Unreachable code detected
             }
+
         }
     }
 }

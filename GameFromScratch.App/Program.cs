@@ -6,7 +6,7 @@ namespace GameFromScratch.App
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var camera = new Camera2D();
             var graphics = PlatformManager.GetGraphics2D(RendererType.SoftwareRenderer, camera);

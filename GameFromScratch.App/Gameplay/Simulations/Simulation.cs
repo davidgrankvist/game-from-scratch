@@ -6,7 +6,7 @@ namespace GameFromScratch.App.Gameplay.Simulations
     internal class Simulation
     {
         private readonly SimulationContext context;
-        private readonly ICollection<ISystem> systems;
+        private readonly List<ISystem> systems;
 
         public Simulation(SimulationTools tools)
         {
