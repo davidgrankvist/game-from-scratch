@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace GameFromScratch.App.Framework.Input
 {
-    internal class InputBuffer
+    internal class InputBuffer : IInputBuffer, IInputBufferWriter
     {
         private readonly bool[] isKeyDown;
         private readonly bool[] isKeyPrevDown;
@@ -23,25 +23,16 @@ namespace GameFromScratch.App.Framework.Input
             this.camera = camera;
         }
 
-        // make buffer operations public so that the platform code can access them
         public void SetKeyState(KeyCode key, bool isDown)
         {
             isKeyDown[(int)key] = isDown;
         }
 
-        // make mouse updates public so that the platform code can access them
         public void SetMousePosition(Vector2Int pixelPosition)
         {
             mousePosition = camera.FromPixel(pixelPosition);
         }
 
-        /*
-         * Refresh previous states every frame in order to support IsPressed/IsReleased.
-         *
-         * Example:
-         * If you release a key and then press nothing, then the previous state is "down".
-         * Since no further input events are received it needs to be refreshed manually to "up".
-         */
         public void Refresh()
         {
             Array.Copy(isKeyDown, isKeyPrevDown, isKeyDown.Length);

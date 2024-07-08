@@ -19,7 +19,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
         private WNDPROC? wndProc; // Prevent window procedure delegate from being garbage collected
 
         public bool IsRunning { get => isRunning; }
-        public InputBuffer Input { get => inputBuffer; }
+        public IInputBuffer Input { get => inputBuffer; }
         public ISleeper Sleeper { get => sleeper; }
 
         public Win32WindowManager(IWin32Graphics2D graphics, Camera2D camera)

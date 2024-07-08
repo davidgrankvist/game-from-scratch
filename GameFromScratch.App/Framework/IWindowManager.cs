@@ -11,7 +11,7 @@ namespace GameFromScratch.App.Framework
 
         public void ProcessMessage();
 
-        public InputBuffer Input { get; }
+        public IInputBuffer Input { get; }
 
         public ISleeper Sleeper { get; }
     }

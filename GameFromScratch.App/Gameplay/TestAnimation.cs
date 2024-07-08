@@ -9,7 +9,7 @@ namespace GameFromScratch.App.Gameplay
     internal class TestAnimation
     {
         private readonly IGraphics2D graphics;
-        private readonly InputBuffer input;
+        private readonly IInputBuffer input;
         private readonly Camera2D camera;
 
         private long animationLastTick = DateTime.MinValue.Ticks;
@@ -30,7 +30,7 @@ namespace GameFromScratch.App.Gameplay
 
         private Vector2 playerPos = new Vector2(333, 333);
 
-        public TestAnimation(IGraphics2D graphics, InputBuffer input, Camera2D camera)
+        public TestAnimation(IGraphics2D graphics, IInputBuffer input, Camera2D camera)
         {
             this.graphics = graphics;
             this.input = input;

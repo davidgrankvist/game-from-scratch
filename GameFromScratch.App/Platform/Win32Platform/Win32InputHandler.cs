@@ -7,11 +7,11 @@ namespace GameFromScratch.App.Platform.Win32Platform
     [SupportedOSPlatform("windows7.0")]
     internal class Win32InputHandler
     {
-        private readonly InputBuffer inputBuffer;
+        private readonly IInputBufferWriter inputBufferWriter;
 
-        public Win32InputHandler(InputBuffer inputBuffer)
+        public Win32InputHandler(IInputBufferWriter inputBufferWriter)
         {
-            this.inputBuffer = inputBuffer;
+            this.inputBufferWriter = inputBufferWriter;
         }
         public void HandleKeyDown(uint virtualKey, int state)
         {
@@ -21,7 +21,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 return;
             }
 
-            inputBuffer.SetKeyState(key.Value, true);
+            inputBufferWriter.SetKeyState(key.Value, true);
         }
 
         public void HandleKeyUp(uint virtualKey, int state)
@@ -32,7 +32,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 return;
             }
 
-            inputBuffer.SetKeyState(key.Value, false);
+            inputBufferWriter.SetKeyState(key.Value, false);
         }
 
         /*
@@ -59,28 +59,28 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
         public void HandleMouseLeftDown(uint mouseVirtualKey, int position)
         {
-            inputBuffer.SetKeyState(KeyCode.MouseLeft, true);
+            inputBufferWriter.SetKeyState(KeyCode.MouseLeft, true);
         }
 
         public void HandleMouseLeftUp(uint mouseVirtualKey, int position)
         {
-            inputBuffer.SetKeyState(KeyCode.MouseLeft, false);
+            inputBufferWriter.SetKeyState(KeyCode.MouseLeft, false);
         }
 
         public void HandleMouseRightDown(uint mouseVirtualKey, int position)
         {
-            inputBuffer.SetKeyState(KeyCode.MouseRight, true);
+            inputBufferWriter.SetKeyState(KeyCode.MouseRight, true);
         }
 
         public void HandleMouseRightUp(uint mouseVirtualKey, int position)
         {
-            inputBuffer.SetKeyState(KeyCode.MouseRight, false);
+            inputBufferWriter.SetKeyState(KeyCode.MouseRight, false);
         }
 
         public void HandleMouseMove(uint mouseVirtualKey, int position)
         {
             var pixelPosition = ToPixel(position);
-            inputBuffer.SetMousePosition(pixelPosition);
+            inputBufferWriter.SetMousePosition(pixelPosition);
         }
 
         private static Vector2Int ToPixel(int mousePosition)
