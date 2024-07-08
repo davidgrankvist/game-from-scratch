@@ -5,8 +5,14 @@ namespace GameFromScratch.App.Framework.Graphics
 {
     internal interface IGraphics2D
     {
+        /// <summary>
+        /// Resize graphics buffers for the given screen resolution.
+        /// </summary>
         public void Resize(int width, int height);
 
+        /// <summary>
+        /// Paint pending graphics.
+        /// </summary>
         public void Commit();
 
         public void Fill(Color color);

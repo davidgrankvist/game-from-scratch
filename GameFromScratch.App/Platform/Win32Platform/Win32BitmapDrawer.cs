@@ -36,14 +36,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
             };
         }
 
+        // Draw the current bitmap right away, without waiting for a WM_PAINT message.
         public override void Commit()
         {
-            /*
-			 * Instead of invalidating, waiting for a WM_PAINT and then drawing from the window procedure,
-			 * we do it all in one place.
-			 *
-			 * InvalidateRect invalidates and BeginPaint validates it again, which means WM_PAINT is not triggered.
-			 */
             PInvoke.InvalidateRect(Hwnd, (RECT?)null, false);
             HDC hdc = PInvoke.BeginPaint(Hwnd, out PAINTSTRUCT ps);
 

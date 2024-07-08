@@ -10,14 +10,15 @@ namespace GameFromScratch.App.Gameplay
     {
         private readonly IWindowManager windowManager;
         private readonly IGraphics2D graphics;
+
         private readonly FpsThrottler fpsThrottler;
         private readonly FpsSampler fpsSampler;
-
         private const int targetFps = 60;
-        private const bool debugMode = false;
         private const int fpsSampleWindow = 100;
 
         private readonly Simulation simulation;
+
+        private const bool debugMode = false;
 
         public Game(IWindowManager windowManager, IGraphics2D graphics, Camera2D camera)
         {
@@ -39,7 +40,7 @@ namespace GameFromScratch.App.Gameplay
 
             while (windowManager.IsRunning)
             {
-                windowManager.ProcessMessage();
+                windowManager.ProcessMessages();
                 fpsThrottler.SleepUntilNextFrame();
 
                 simulation.Update((float)frameTimer.Elapsed.TotalSeconds);

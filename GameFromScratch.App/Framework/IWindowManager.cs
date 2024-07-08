@@ -9,7 +9,7 @@ namespace GameFromScratch.App.Framework
 
         public void CreateWindow();
 
-        public void ProcessMessage();
+        public void ProcessMessages();
 
         public IInputBuffer Input { get; }
 

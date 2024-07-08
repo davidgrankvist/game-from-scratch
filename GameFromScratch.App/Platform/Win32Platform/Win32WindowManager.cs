@@ -75,18 +75,37 @@ namespace GameFromScratch.App.Platform.Win32Platform
 
             // make sure Thread.Sleep can handle 1ms delays
             sleeper.Initialize(1);
+
+            /*
+             * TODO(hack): This is to handle a WM_PAINT edge case.
+             *
+             * Problem:
+             * We skip WM_PAINT messages so that we can paint at a controlled frame rate.
+             * Initially the client area is invalidated, which triggers WM_PAINT messages.
+             * Since we skip those, further WM_PAINT messages are triggered and we get stuck
+             * in the PeekMessage loop.
+             *
+             * The workaround here is to paint one time in advance so that the client area is validated
+             * and the WM_PAINT messages stop getting triggered.
+             */
+            graphics.Commit();
         }
 
-        public void ProcessMessage()
+        public void ProcessMessages()
         {
-            var peek = PInvoke.PeekMessage(out MSG msg, HWND.Null, 0, 0, PEEK_MESSAGE_REMOVE_TYPE.PM_REMOVE);
-            if (msg.message == PInvoke.WM_QUIT)
+            /*
+             * Remove all pending input messages from the message queue and trigger the window procedure for each one.
+             *
+             * The WM_QUIT even is not associated with the current window, so in order to receive that event
+             * a null HWND is used here.
+             */
+            while (PInvoke.PeekMessage(out MSG msg, HWND.Null, 0, 0, PEEK_MESSAGE_REMOVE_TYPE.PM_REMOVE) != 0)
             {
-                isRunning = false;
-                return;
-            }
-            else if (peek != 0)
-            {
+                if (msg.message == PInvoke.WM_QUIT)
+                {
+                    isRunning = false;
+                    return;
+                }
                 PInvoke.TranslateMessage(msg);
                 PInvoke.DispatchMessage(msg);
             }
@@ -103,7 +122,7 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     graphics.Resize(rect.Width, rect.Height);
                     break;
                 case PInvoke.WM_DESTROY:
-                    PInvoke.PostQuitMessage(0);
+                    PInvoke.PostQuitMessage(0); // triggers WM_QUIT
                     break;
                 case PInvoke.WM_PAINT:
                     // Do nothing as painting is handled by the rendering code
