@@ -1,6 +1,8 @@
 ﻿using GameFromScratch.App.Framework;
 using GameFromScratch.App.Framework.Fps;
 using GameFromScratch.App.Framework.Graphics;
+using GameFromScratch.App.Gameplay.Simulations;
+using System.Diagnostics;
 
 namespace GameFromScratch.App.Gameplay
 {
@@ -9,41 +11,45 @@ namespace GameFromScratch.App.Gameplay
         private readonly IWindowManager windowManager;
         private readonly IGraphics2D graphics;
         private readonly FpsThrottler fpsThrottler;
-
-        private readonly TestAnimation testAnimation;
         private readonly FpsSampler fpsSampler;
 
+        private const int targetFps = 60;
         private const bool debugMode = false;
+        private const int fpsSampleWindow = 100;
+
+        private readonly Simulation simulation;
 
         public Game(IWindowManager windowManager, IGraphics2D graphics, Camera2D camera)
         {
             this.windowManager = windowManager;
             this.graphics = graphics;
-            fpsThrottler = new FpsThrottler(60, windowManager.Sleeper);
 
-            testAnimation = new TestAnimation(graphics, windowManager.Input, camera);
-            fpsSampler = new FpsSampler(100);
+            fpsThrottler = new FpsThrottler(targetFps, windowManager.Sleeper);
+            fpsSampler = new FpsSampler(fpsSampleWindow);
+
+            simulation = new Simulation(new SimulationTools(graphics, windowManager.Input, camera));
         }
 
         public void Run()
         {
             windowManager.CreateWindow();
+            simulation.Initialize();
+
+            var frameTimer = new Stopwatch();
 
             while (windowManager.IsRunning)
             {
                 windowManager.ProcessMessage();
                 fpsThrottler.SleepUntilNextFrame();
 
-                Update();
+                simulation.Update((float)frameTimer.Elapsed.TotalSeconds);
+                graphics.Commit();
+                windowManager.Input.Refresh();
+
                 PrintFps();
 
-                windowManager.Input.Refresh();
+                frameTimer.Restart();
             }
-        }
-
-        private void Update()
-        {
-            testAnimation.Update();
         }
 
         private void PrintFps()
