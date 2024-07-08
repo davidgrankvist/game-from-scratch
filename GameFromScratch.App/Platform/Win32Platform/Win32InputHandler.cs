@@ -1,4 +1,5 @@
 ﻿using GameFromScratch.App.Framework.Input;
+using GameFromScratch.App.Framework.Maths;
 using System.Runtime.Versioning;
 
 namespace GameFromScratch.App.Platform.Win32Platform
@@ -74,6 +75,26 @@ namespace GameFromScratch.App.Platform.Win32Platform
         public void HandleMouseRightUp(uint mouseVirtualKey, int position)
         {
             inputBuffer.SetKeyState(KeyCode.MouseRight, false);
+        }
+
+        public void HandleMouseMove(uint mouseVirtualKey, int position)
+        {
+            var pixelPosition = ToPixel(position);
+            inputBuffer.SetMousePosition(pixelPosition);
+        }
+
+        private static Vector2Int ToPixel(int mousePosition)
+        {
+            /*
+             * The mouse position is stored within a 32-bit int like this:
+             * x = lower 16 bits
+             * y = higher 16 bits
+             *
+             * See https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove
+             */
+            var x = mousePosition & 0x0000FFFF;
+            var y = mousePosition >> 16;
+            return new Vector2Int(x, y);
         }
     }
 }

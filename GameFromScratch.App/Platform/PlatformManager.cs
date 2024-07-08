@@ -21,14 +21,14 @@ namespace GameFromScratch.App.Platform
             throw new PlatformNotSupportedException($"Unsupported OS {Environment.OSVersion}");
         }
 
-        public static IWindowManager GetWindowManager(IGraphics2D graphics)
+        public static IWindowManager GetWindowManager(IGraphics2D graphics, Camera2D camera)
         {
             if (OperatingSystem.IsWindowsVersionAtLeast(7))
             {
                 switch (graphics)
                 {
                     case IWin32Graphics2D win32Graphics2D:
-                        return new Win32WindowManager(win32Graphics2D);
+                        return new Win32WindowManager(win32Graphics2D, camera);
                     default:
                         throw new PlatformNotSupportedException("Unsupported graphics for this platform");
                 }

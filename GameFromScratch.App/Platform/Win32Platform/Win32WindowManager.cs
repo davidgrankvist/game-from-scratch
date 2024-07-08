@@ -22,10 +22,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
         public InputBuffer Input { get => inputBuffer; }
         public ISleeper Sleeper { get => sleeper; }
 
-        public Win32WindowManager(IWin32Graphics2D graphics)
+        public Win32WindowManager(IWin32Graphics2D graphics, Camera2D camera)
         {
             this.graphics = graphics;
-            inputBuffer = new InputBuffer();
+            inputBuffer = new InputBuffer(camera);
             inputHandler = new Win32InputHandler(inputBuffer);
             sleeper = new Win32Sleeper();
         }
@@ -125,6 +125,9 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     break;
                 case PInvoke.WM_RBUTTONUP:
                     inputHandler.HandleMouseRightUp(wParamUint, lParamInt);
+                    break;
+                case PInvoke.WM_MOUSEMOVE:
+                    inputHandler.HandleMouseMove(wParamUint, lParamInt);
                     break;
                 default:
                     return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);

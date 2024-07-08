@@ -157,17 +157,25 @@ namespace GameFromScratch.App.Gameplay
             {
                 Console.WriteLine("Pressed mouse left");
             }
+
             if (input.IsReleased(KeyCode.MouseLeft))
             {
                 Console.WriteLine("Released mouse left");
             }
+
             if (input.IsPressed(KeyCode.MouseRight))
             {
                 Console.WriteLine("Pressed mouse right");
             }
+
             if (input.IsReleased(KeyCode.MouseRight))
             {
                 Console.WriteLine("Released mouse right");
+            }
+
+            if (input.IsDown(KeyCode.MouseLeft))
+            {
+                graphics.DrawCircle(input.MousePosition, 25, Color.Pink);
             }
         }
     }
