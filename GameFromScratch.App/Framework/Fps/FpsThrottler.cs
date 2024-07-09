@@ -18,7 +18,7 @@ namespace GameFromScratch.App.Framework.Fps
         private static double GetTargetMsPerFrame(int fps)
         {
             var targetTicksPerFrame = FpsConstants.TICKS_PER_SECOND / fps;
-            return targetTicksPerFrame / FpsConstants.MILLISECONDS_PER_TICK;
+            return targetTicksPerFrame / FpsConstants.TICKS_PER_MILLISECOND;
         }
 
         public void SleepUntilNextFrame()
