@@ -5,6 +5,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;CustomDebug</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'CustomDebug'">
+      <DefineConstants>DEBUG;TRACE;CUSTOM_DEBUG</DefineConstants>
+      <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,5 +19,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
 
 </Project>

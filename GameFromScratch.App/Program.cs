@@ -8,11 +8,13 @@ namespace GameFromScratch.App
     {
         static void Main()
         {
+            var config = GameConfiguration.Load();
+
             var camera = new Camera2D();
             var graphics = PlatformManager.GetGraphics2D(RendererType.SoftwareRenderer, camera);
             var windowManager = PlatformManager.GetWindowManager(graphics, camera);
 
-            var game = new Game(windowManager, graphics, camera);
+            var game = new Game(windowManager, graphics, camera, config.DebugMode);
             game.Run();
         }
     }

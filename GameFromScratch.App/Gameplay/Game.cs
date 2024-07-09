@@ -18,9 +18,9 @@ namespace GameFromScratch.App.Gameplay
 
         private readonly Simulation simulation;
 
-        private const bool debugMode = false;
+        private readonly bool debugMode;
 
-        public Game(IWindowManager windowManager, IGraphics2D graphics, Camera2D camera)
+        public Game(IWindowManager windowManager, IGraphics2D graphics, Camera2D camera, bool debugMode)
         {
             this.windowManager = windowManager;
             this.graphics = graphics;
@@ -29,6 +29,8 @@ namespace GameFromScratch.App.Gameplay
             fpsSampler = new FpsSampler(fpsSampleWindow);
 
             simulation = new Simulation(new SimulationTools(graphics, windowManager.Input, camera));
+
+            this.debugMode = debugMode;
         }
 
         public void Run()
@@ -57,12 +59,9 @@ namespace GameFromScratch.App.Gameplay
         {
             if (debugMode)
             {
-#pragma warning disable CS0162 // Unreachable code detected
                 fpsSampler.Sample();
                 Console.WriteLine($"FPS: {fpsSampler.Fps}");
-#pragma warning restore CS0162 // Unreachable code detected
             }
-
         }
     }
 }
