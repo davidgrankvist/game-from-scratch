@@ -120,6 +120,11 @@ namespace GameFromScratch.App.Platform.Win32Platform
                 case PInvoke.WM_SIZE:
                     PInvoke.GetClientRect(hwnd, out RECT rect);
                     graphics.Resize(rect.Width, rect.Height);
+                    /*
+                     * TODO(hack): Scaling up causes a freeze unless we redraw here.
+                     * Using front/back buffers might help, but redrawing is a quick fix for now.
+                     */
+                    graphics.Commit();
                     break;
                 case PInvoke.WM_DESTROY:
                     PInvoke.PostQuitMessage(0); // triggers WM_QUIT
