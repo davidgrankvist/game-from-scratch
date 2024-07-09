@@ -9,19 +9,14 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
         private float animatedObjectPosX;
         private float animatedObjectVx;
 
-        private Vector2 playerPos;
-        private readonly float playerSpeed;
-
-        public DemoSystem()
+        public void Initialize(SimulationContext context)
         {
             animatedObjectPosX = 0;
             animatedObjectVx = 100f;
-            playerPos = new Vector2(200, 200);
-            playerSpeed = 120f;
-        }
 
-        public void Initialize()
-        {
+            var player = context.State.Repository.Player;
+            player.Position = new Vector2(200, 200);
+            player.Speed = 120f;
         }
 
         public void Update(SimulationContext context)
@@ -49,8 +44,10 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             context.Tools.Graphics.DrawRectangle(pos, side, side, Color.Black);
         }
 
-        private void MovePlayer(SimulationContext context)
+        private static void MovePlayer(SimulationContext context)
         {
+            var player = context.State.Repository.Player;
+            var playerSpeed = player.Speed;
             var playerVx = 0f;
             var playerVy = 0f;
             if (context.Tools.Input.IsDown(KeyCode.W))
@@ -70,10 +67,11 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 playerVx = playerSpeed;
             }
 
-            var playerVelocity = new Vector2(playerVx, playerVy);
-            playerPos = playerPos + playerVelocity * context.State.DeltaTime;
+            player.Velocity = new Vector2(playerVx, playerVy);
+            player.Position = player.Position + player.Velocity * context.State.DeltaTime;
 
-            context.Tools.Graphics.DrawCircle(playerPos, 25, Color.Blue);
+            var topLeft = player.Position - player.Bounds;
+            context.Tools.Graphics.DrawRectangle(topLeft, player.Bounds.X, player.Bounds.Y, Color.Blue);
         }
     }
 }

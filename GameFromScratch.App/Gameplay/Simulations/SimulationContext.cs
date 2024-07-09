@@ -1,11 +1,11 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Systems;
+﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
 
 namespace GameFromScratch.App.Gameplay.Simulations
 {
     internal class SimulationContext
     {
         public readonly SimulationTools Tools;
-        public SimulationState State;
+        public readonly SimulationState State;
 
         public SimulationContext(SimulationTools tools)
         {

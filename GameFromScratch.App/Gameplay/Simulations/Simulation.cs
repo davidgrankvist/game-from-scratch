@@ -20,7 +20,7 @@ namespace GameFromScratch.App.Gameplay.Simulations
 
             foreach (var system in systems)
             {
-                system.Initialize();
+                system.Initialize(context);
             }
         }
 

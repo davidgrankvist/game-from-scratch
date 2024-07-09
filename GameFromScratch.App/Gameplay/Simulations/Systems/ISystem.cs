@@ -2,7 +2,7 @@
 {
     internal interface ISystem
     {
-        public void Initialize();
+        public void Initialize(SimulationContext context);
 
         public void Update(SimulationContext context);
     }
