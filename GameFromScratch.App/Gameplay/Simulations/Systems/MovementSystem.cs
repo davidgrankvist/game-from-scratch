@@ -93,16 +93,32 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                     var prevOverlapX = playerPrevMaxX > entityMinX && playerPrevMinX < entityMaxX;
                     var prevOverlapY = playerPrevMaxY > entityMinY && playerPrevMinY < entityMaxY;
 
-                    // TODO(improvement): pick nearest OK position rather than just the previous position
+                    // collided from X
                     if (!prevOverlapX)
                     {
-                        // collided from X
-                        player.Position.X = playerPrevPos.X;
+                        // moved from left to right
+                        if (player.Velocity.X >= 0)
+                        {
+                            player.Position.X = entityMinX - player.Bounds.X;
+                        }
+                        else // moved from right to left
+                        {
+                            player.Position.X = entityMaxX;
+                        }
                     }
+
+                    // collided from Y
                     if (!prevOverlapY)
                     {
-                        // collided from Y
-                        player.Position.Y = playerPrevPos.Y;
+                        // moved downwards
+                        if (player.Velocity.Y >= 0)
+                        {
+                            player.Position.Y = entityMinY - player.Bounds.Y;
+                        }
+                        else // moved upwards
+                        {
+                            player.Position.Y = entityMaxY;
+                        }
                     }
                 }
             }
