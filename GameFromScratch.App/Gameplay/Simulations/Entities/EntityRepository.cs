@@ -23,10 +23,15 @@
             entities.Remove(entity);
         }
 
+        public void AddRange(IEnumerable<Entity> entities)
+        {
+            this.entities.AddRange(entities);
+        }
+
         /// <summary>
         /// Query for entities where all specified flags are set.
         /// </summary>
-        public IEnumerable<Entity> Query(EntityFlag flags)
+        public IEnumerable<Entity> Query(EntityFlags flags)
         {
             return entities.Where(entity => (entity.Flags & flags) == flags);
         }

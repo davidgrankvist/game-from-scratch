@@ -1,47 +1,27 @@
 ﻿using GameFromScratch.App.Framework.Input;
-using System.Drawing;
+using GameFromScratch.App.Gameplay.Simulations.Entities;
 using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.Simulations.Systems
 {
     internal class DemoSystem : ISystem
     {
-        private float animatedObjectPosX;
-        private float animatedObjectVx;
-
         public void Initialize(SimulationContext context)
         {
-            animatedObjectPosX = 0;
-            animatedObjectVx = 100f;
+            var repo = context.State.Repository;
 
-            var player = context.State.Repository.Player;
+            var player = repo.Player;
             player.Position = new Vector2(200, 200);
             player.Speed = 120f;
+
+            var mapSize = new Vector2(900, 400);
+            repo.AddRange(EntityCreator.CreateMap(mapSize));
         }
 
         public void Update(SimulationContext context)
         {
-            DrawCursor(context);
-            AnimateObject(context);
             MovePlayer(context);
-        }
-
-        private static void DrawCursor(SimulationContext context)
-        {
-            context.Tools.Graphics.DrawCircle(context.Tools.Input.MousePosition, 25, Color.Green);
-        }
-
-        private void AnimateObject(SimulationContext context)
-        {
-            var posY0 = 100;
-            animatedObjectPosX = animatedObjectPosX + context.State.DeltaTime * animatedObjectVx;
-            if (animatedObjectPosX < 0 || animatedObjectPosX > 100)
-            {
-                animatedObjectVx = -animatedObjectVx;
-            }
-            var side = 50;
-            var pos = new Vector2(animatedObjectPosX, posY0);
-            context.Tools.Graphics.DrawRectangle(pos, side, side, Color.Black);
+            Render(context);
         }
 
         private static void MovePlayer(SimulationContext context)
@@ -69,9 +49,22 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
             player.Velocity = new Vector2(playerVx, playerVy);
             player.Position = player.Position + player.Velocity * context.State.DeltaTime;
+        }
 
-            var topLeft = player.Position - player.Bounds;
-            context.Tools.Graphics.DrawRectangle(topLeft, player.Bounds.X, player.Bounds.Y, Color.Blue);
+        private static void Render(SimulationContext context)
+        {
+            var repo = context.State.Repository;
+            var entitiesToRender = repo.Query(EntityFlags.Render);
+            foreach (var entity in entitiesToRender)
+            {
+                if (entity == repo.Player)
+                {
+                    continue;
+                }
+                context.Tools.Graphics.DrawRectangle(entity.Position, entity.Bounds.X, entity.Bounds.Y, entity.Color);
+            }
+            var player = repo.Player;
+            context.Tools.Graphics.DrawRectangle(player.Position, player.Bounds.X, player.Bounds.Y, player.Color);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
     internal class Entity
     {
         // types and behaviors
-        public EntityFlag Flags;
+        public EntityFlags Flags;
 
         // movement
         public Vector2 Position;

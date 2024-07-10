@@ -1,14 +1,15 @@
 ﻿namespace GameFromScratch.App.Gameplay.Simulations.Entities
 {
     [Flags]
-    internal enum EntityFlag
+    internal enum EntityFlags
     {
         /*
          * Use powers of 2 so that bitwise AND/OR can be used
          * to compose flags.
          */
         None = 0,
-        Test1 = 1 << 0,
-        Test2 = 1 << 1,
+        Solid = 1 << 0,
+        Move = 1 << 1,
+        Render = 1 << 2
     }
 }
