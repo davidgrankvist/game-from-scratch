@@ -10,6 +10,7 @@
         None = 0,
         Solid = 1 << 0,
         Move = 1 << 1,
-        Render = 1 << 2
+        Render = 1 << 2,
+        MovePeriodic = 1 << 3,
     }
 }

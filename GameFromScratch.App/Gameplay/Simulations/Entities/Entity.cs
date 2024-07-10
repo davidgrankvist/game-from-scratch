@@ -13,6 +13,10 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
         public Vector2 Velocity;
         public float Speed;
 
+        // movement - periodic
+        public Vector2 MoveStart;
+        public Vector2 MoveEnd;
+
         // body
         public Vector2 Bounds;
 

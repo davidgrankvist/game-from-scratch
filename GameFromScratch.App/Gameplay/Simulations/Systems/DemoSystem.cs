@@ -21,6 +21,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
         public void Update(SimulationContext context)
         {
             MovePlayer(context);
+            MovePeriodicEntities(context);
             Render(context);
         }
 
@@ -49,6 +50,29 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
             player.Velocity = new Vector2(playerVx, playerVy);
             player.Position = player.Position + player.Velocity * context.State.DeltaTime;
+        }
+
+        private static void MovePeriodicEntities(SimulationContext context)
+        {
+            var repo = context.State.Repository;
+            var periodicEntities = repo.Query(EntityFlags.MovePeriodic);
+
+            foreach (var entity in periodicEntities)
+            {
+                /*
+                 * Only consider elevator up and down movement for now
+                 */
+                var py = entity.Position.Y;
+                var vy = entity.Velocity.Y;
+                // switch direction if reached start/end
+                if (py >= entity.MoveStart.Y && vy > 0 || py <= entity.MoveEnd.Y && vy < 0)
+                {
+                    vy = -vy;
+                }
+
+                entity.Velocity = new Vector2(0, vy);
+                entity.Position = entity.Position + entity.Velocity * context.State.DeltaTime;
+            }
         }
 
         private static void Render(SimulationContext context)
