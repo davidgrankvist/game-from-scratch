@@ -13,6 +13,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
         {
             UpdateElevatorVelocities(context);
             MoveEntities(context);
+            ResolveCollisions(context);
         }
 
         private static void UpdateElevatorVelocities(SimulationContext context)
@@ -45,6 +46,65 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             foreach (var entity in entitiesToMove)
             {
                 entity.Position = entity.Position + entity.Velocity * context.State.DeltaTime;
+            }
+        }
+
+        // TODO(cleanup): yikes
+        private static void ResolveCollisions(SimulationContext context)
+        {
+            var repo = context.State.Repository;
+            var solidNonPlayerEntities = repo.Query(EntityFlags.Solid, EntityFlags.Player);
+            var player = repo.Player;
+
+            /*
+             * Approach:
+             *  1. Assume that all shapes are rectangles along the same axis
+             *  2. Use Aligned Axis Bounding Box (AABB) collision detection
+             *  3. Check previous overlap in X or Y
+             *  4. Adjust to a non-overlapping X or Y
+             */
+            // TODO(bug): handle elevators
+            foreach (var entity in solidNonPlayerEntities)
+            {
+                // DETECT
+                var playerMinX = player.Position.X;
+                var playerMaxX = player.Position.X + player.Bounds.X;
+                var playerMinY = player.Position.Y;
+                var playerMaxY = player.Position.Y + player.Bounds.Y;
+
+                var entityMinX = entity.Position.X;
+                var entityMaxX = entity.Position.X + entity.Bounds.X;
+                var entityMinY = entity.Position.Y;
+                var entityMaxY = entity.Position.Y + entity.Bounds.Y;
+
+                var overlapX = playerMaxX > entityMinX && playerMinX < entityMaxX;
+                var overlapY = playerMaxY > entityMinY && playerMinY < entityMaxY;
+                var didCollide = overlapX && overlapY;
+
+                // RESOLVE
+                if (didCollide)
+                {
+                    var playerPrevPos = player.Position - player.Velocity * context.State.DeltaTime;
+                    var playerPrevMinX = playerPrevPos.X;
+                    var playerPrevMaxX = playerPrevPos.X + player.Bounds.X;
+                    var playerPrevMinY = playerPrevPos.Y;
+                    var playerPrevMaxY = playerPrevPos.Y + player.Bounds.Y;
+
+                    var prevOverlapX = playerPrevMaxX > entityMinX && playerPrevMinX < entityMaxX;
+                    var prevOverlapY = playerPrevMaxY > entityMinY && playerPrevMinY < entityMaxY;
+
+                    // TODO(improvement): pick nearest OK position rather than just the previous position
+                    if (!prevOverlapX)
+                    {
+                        // collided from X
+                        player.Position.X = playerPrevPos.X;
+                    }
+                    if (!prevOverlapY)
+                    {
+                        // collided from Y
+                        player.Position.Y = playerPrevPos.Y;
+                    }
+                }
             }
         }
     }
