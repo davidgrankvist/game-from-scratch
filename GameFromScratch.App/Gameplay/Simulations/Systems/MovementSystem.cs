@@ -59,10 +59,16 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
              *  4. Adjust to a non-overlapping X or Y
              */
             var repo = context.State.Repository;
-            var stationaryEntities = repo.Query(EntityFlags.Solid, EntityFlags.Player | EntityFlags.Move);
             var player = repo.Player;
 
-
+            /*
+             * Phase 1 - Check if the player moves into something stationary.
+             *
+             * This may alter both the player position and velocity.
+             */
+            var stationaryEntities = repo.Query(EntityFlags.Solid, EntityFlags.Player)
+                // Exclude moving entities, except elevators since they are X axis stationary.
+                .Where(entity => !entity.Flags.HasFlag(EntityFlags.Move) || entity.Flags.HasFlag(EntityFlags.Elevator));
             foreach (var entity in stationaryEntities)
             {
                 var (overlapX, overlapY) = CheckOverlap(player.Position, player.Bounds, entity.Position, entity.Bounds);
@@ -74,7 +80,24 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 }
             }
 
-            // TODO(bug): handle elevators
+            /*
+             * Phase 2 - Check if something moves into the player.
+             *
+             * This may alter either of the entities, depending on who gets "pushed".
+             *
+             * Only checks elevators for now.
+             */
+            var elevators = repo.Query(EntityFlags.Solid | EntityFlags.Move | EntityFlags.Elevator, EntityFlags.Player);
+            foreach (var elevator in elevators)
+            {
+                var (overlapX, overlapY) = CheckOverlap(player.Position, player.Bounds, elevator.Position, elevator.Bounds);
+                var didCollide = overlapX && overlapY;
+
+                if (didCollide)
+                {
+                    ResolveElevatorIntoPlayer(elevator, player);
+                }
+            }
         }
 
         private static (bool OverlapX, bool OverlapY) CheckOverlap(Vector2 PositionA, Vector2 BoundsA, Vector2 PositionB, Vector2 BoundsB)
@@ -103,33 +126,68 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             // collided from X
             if (!prevOverlapX)
             {
-                // moved from left to right
-                if (moving.Velocity.X >= 0)
-                {
-                    // stop at stationary left edge
-                    moving.Position.X = stationary.Position.X - moving.Bounds.X;
-                }
-                else // moved from right to left
-                {
-                    // stop at stationary right edge
-                    moving.Position.X = stationary.Position.X + stationary.Bounds.X;
-                }
+                ResolveMoveIntoStationaryX(moving, stationary);
             }
 
             // collided from Y
             if (!prevOverlapY)
             {
-                // moved downwards
-                if (moving.Velocity.Y >= 0)
-                {
-                    // stop at stationary top edge
-                    moving.Position.Y = stationary.Position.Y - moving.Bounds.Y;
-                }
-                else // moved upwards
-                {
-                    // stop at stationary bottom edge
-                    moving.Position.Y = stationary.Position.Y + stationary.Bounds.Y;
-                }
+                ResolveMoveIntoStationaryY(moving, stationary);
+            }
+        }
+        private static void ResolveMoveIntoStationaryX(Entity moving, Entity stationary)
+        {
+            // moved from left to right
+            if (moving.Velocity.X >= 0)
+            {
+                // stop at stationary left edge
+                moving.Position.X = stationary.Position.X - moving.Bounds.X;
+            }
+            else // moved from right to left
+            {
+                // stop at stationary right edge
+                moving.Position.X = stationary.Position.X + stationary.Bounds.X;
+            }
+
+            // stop further X movement
+            moving.Velocity = new Vector2(0, moving.Velocity.Y);
+        }
+
+        private static void ResolveMoveIntoStationaryY(Entity moving, Entity stationary)
+        {
+            // moved downwards
+            if (moving.Velocity.Y >= 0)
+            {
+                // stop at stationary top edge
+                moving.Position.Y = stationary.Position.Y - moving.Bounds.Y;
+            }
+            else // moved upwards
+            {
+                // stop at stationary bottom edge
+                moving.Position.Y = stationary.Position.Y + stationary.Bounds.Y;
+            }
+
+            // stop further Y movement
+            moving.Velocity = new Vector2(moving.Velocity.X, 0);
+        }
+
+        private static void ResolveElevatorIntoPlayer(Entity elevator, Entity player)
+        {
+            /*
+             * X axis - this part is stationary and handled in earlier checks
+             * Y axis - if there is still a collision, then it must be along this axis
+             */
+
+            // moved downwards
+            if (elevator.Velocity.Y >= 0)
+            {
+                // stop elevator at player top edge
+                elevator.Position.Y = player.Position.Y - elevator.Bounds.Y;
+            }
+            else // moved upwards
+            {
+                // push player to elevator top edge
+                player.Position.Y = elevator.Position.Y - player.Bounds.Y;
             }
         }
     }
