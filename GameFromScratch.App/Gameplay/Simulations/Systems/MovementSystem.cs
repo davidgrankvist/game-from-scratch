@@ -67,31 +67,14 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             foreach (var entity in solidNonPlayerEntities)
             {
                 // DETECT
-                var playerMinX = player.Position.X;
-                var playerMaxX = player.Position.X + player.Bounds.X;
-                var playerMinY = player.Position.Y;
-                var playerMaxY = player.Position.Y + player.Bounds.Y;
-
-                var entityMinX = entity.Position.X;
-                var entityMaxX = entity.Position.X + entity.Bounds.X;
-                var entityMinY = entity.Position.Y;
-                var entityMaxY = entity.Position.Y + entity.Bounds.Y;
-
-                var overlapX = playerMaxX > entityMinX && playerMinX < entityMaxX;
-                var overlapY = playerMaxY > entityMinY && playerMinY < entityMaxY;
+                var (overlapX, overlapY) = CheckOverlap(player.Position, player.Bounds, entity.Position, entity.Bounds);
                 var didCollide = overlapX && overlapY;
 
                 // RESOLVE
                 if (didCollide)
                 {
                     var playerPrevPos = player.Position - player.Velocity * context.State.DeltaTime;
-                    var playerPrevMinX = playerPrevPos.X;
-                    var playerPrevMaxX = playerPrevPos.X + player.Bounds.X;
-                    var playerPrevMinY = playerPrevPos.Y;
-                    var playerPrevMaxY = playerPrevPos.Y + player.Bounds.Y;
-
-                    var prevOverlapX = playerPrevMaxX > entityMinX && playerPrevMinX < entityMaxX;
-                    var prevOverlapY = playerPrevMaxY > entityMinY && playerPrevMinY < entityMaxY;
+                    var (prevOverlapX, prevOverlapY) = CheckOverlap(playerPrevPos, player.Bounds, entity.Position, entity.Bounds);
 
                     // collided from X
                     if (!prevOverlapX)
@@ -99,11 +82,13 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                         // moved from left to right
                         if (player.Velocity.X >= 0)
                         {
-                            player.Position.X = entityMinX - player.Bounds.X;
+                            // stop at entity left edge
+                            player.Position.X = entity.Position.X - player.Bounds.X;
                         }
                         else // moved from right to left
                         {
-                            player.Position.X = entityMaxX;
+                            // stop at entity right edge
+                            player.Position.X = entity.Position.X + entity.Bounds.X;
                         }
                     }
 
@@ -113,15 +98,35 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                         // moved downwards
                         if (player.Velocity.Y >= 0)
                         {
-                            player.Position.Y = entityMinY - player.Bounds.Y;
+                            // stop at entity top edge
+                            player.Position.Y = entity.Position.Y - player.Bounds.Y;
                         }
                         else // moved upwards
                         {
-                            player.Position.Y = entityMaxY;
+                            // stop at entity bottom edge
+                            player.Position.Y = entity.Position.Y + entity.Bounds.Y;
                         }
                     }
                 }
             }
+        }
+
+        private static (bool OverlapX, bool OverlapY) CheckOverlap(Vector2 PositionA, Vector2 BoundsA, Vector2 PositionB, Vector2 BoundsB)
+        {
+            var aMinX = PositionA.X;
+            var aMaxX = PositionA.X + BoundsA.X;
+            var aMinY = PositionA.Y;
+            var aMaxY = PositionA.Y + BoundsA.Y;
+
+            var bMinX = PositionB.X;
+            var bMaxX = PositionB.X + BoundsB.X;
+            var bMinY = PositionB.Y;
+            var bMaxY = PositionB.Y + BoundsB.Y;
+
+            var overlapX = aMaxX > bMinX && aMinX < bMaxX;
+            var overlapY = aMaxY > bMinY && aMinY < bMaxY;
+
+            return (overlapX, overlapY);
         }
     }
 }
