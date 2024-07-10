@@ -75,13 +75,9 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
         private static void Render(SimulationContext context)
         {
             var repo = context.State.Repository;
-            var entitiesToRender = repo.Query(EntityFlags.Render);
-            foreach (var entity in entitiesToRender)
+            var nonPlayerRenderEntities = repo.Query(EntityFlags.Render, EntityFlags.Player);
+            foreach (var entity in nonPlayerRenderEntities)
             {
-                if (entity == repo.Player)
-                {
-                    continue;
-                }
                 context.Tools.Graphics.DrawRectangle(entity.Position, entity.Bounds.X, entity.Bounds.Y, entity.Color);
             }
             var player = repo.Player;

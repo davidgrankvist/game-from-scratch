@@ -53,11 +53,15 @@
         }
 
         /// <summary>
-        /// Query for entities where all specified flags are set.
+        /// Query for entities where all specified flags are set. Optionally, skip entities matching any of the skip flags.
         /// </summary>
-        public IEnumerable<Entity> Query(EntityFlags flags)
+        public IEnumerable<Entity> Query(EntityFlags flags, EntityFlags skip = EntityFlags.None)
         {
-            return entities.Where(entity => (entity.Flags & flags) == flags);
+            return entities.Where(
+                entity =>
+                    (entity.Flags & flags) == flags
+                    && (entity.Flags & skip) == EntityFlags.None
+            );
         }
     }
 }
