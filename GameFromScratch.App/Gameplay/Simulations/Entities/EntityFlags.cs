@@ -12,5 +12,6 @@
         Move = 1 << 1,
         Render = 1 << 2,
         MovePeriodic = 1 << 3,
+        Player = 1 << 4,
     }
 }

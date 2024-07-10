@@ -5,17 +5,32 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
 {
     internal static class EntityCreator
     {
-        public static Entity CreatePlayer()
+
+        public static IEnumerable<Entity> CreateConceptLevel(Vector2 mapSize)
+        {
+            var player = CreatePlayer();
+            var map = CreateMap(mapSize);
+
+            yield return player;
+            foreach (var entity in map)
+            {
+                yield return entity;
+            }
+        }
+
+        private static Entity CreatePlayer()
         {
             return new Entity
             {
-                Flags = EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move,
+                Flags = EntityFlags.Player | EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move,
+                Speed = 120f,
+                Position = new Vector2(200, 200),
                 Bounds = new Vector2(50, 50),
                 Color = Color.Blue,
             };
         }
 
-        public static IEnumerable<Entity> CreateMap(Vector2 mapSize)
+        private static IEnumerable<Entity> CreateMap(Vector2 mapSize)
         {
             // map
             var ground = new Entity

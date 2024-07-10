@@ -8,14 +8,11 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
     {
         public void Initialize(SimulationContext context)
         {
-            var repo = context.State.Repository;
-
-            var player = repo.Player;
-            player.Position = new Vector2(200, 200);
-            player.Speed = 120f;
-
             var mapSize = new Vector2(900, 400);
-            repo.AddRange(EntityCreator.CreateMap(mapSize));
+            var level = EntityCreator.CreateConceptLevel(mapSize);
+
+            var repo = context.State.Repository;
+            repo.AddRange(level);
         }
 
         public void Update(SimulationContext context)

@@ -2,30 +2,54 @@
 {
     internal class EntityRepository
     {
-        public readonly Entity Player;
+
+        // all entities
         private readonly List<Entity> entities;
         public IEnumerable<Entity> Entities { get => entities; }
-        public IEnumerable<Entity> NonPlayerEntities { get => entities.Skip(1); }
+
+        // player convenience accessor
+        private readonly Entity dummyPlayer;
+        private Entity player;
+        public Entity Player { get => player; }
 
         public EntityRepository()
         {
-            Player = EntityCreator.CreatePlayer();
-            entities = new List<Entity>() { Player };
+            entities = new List<Entity>();
+            dummyPlayer = new Entity
+            {
+                Flags = EntityFlags.Player,
+            };
+            player = dummyPlayer;
         }
 
         public void Add(Entity entity)
         {
+            UpdatePlayerCache(entity, true);
             entities.Add(entity);
         }
 
         public void Remove(Entity entity)
         {
+            UpdatePlayerCache(entity, false);
             entities.Remove(entity);
+        }
+
+        private void UpdatePlayerCache(Entity entity, bool add)
+        {
+            var isPlayer = entity.Flags.HasFlag(EntityFlags.Player);
+            if (!isPlayer)
+            {
+                return;
+            }
+            player = add ? entity : dummyPlayer;
         }
 
         public void AddRange(IEnumerable<Entity> entities)
         {
-            this.entities.AddRange(entities);
+            foreach (var entity in entities)
+            {
+                Add(entity);
+            }
         }
 
         /// <summary>
