@@ -16,7 +16,12 @@ namespace GameFromScratch.App.Gameplay.Simulations
 
         public void Initialize()
         {
-            systems.Add(new DemoSystem());
+            systems.AddRange([
+                new SpawnSystem(),
+                new PlayerInputSystem(),
+                new MovementSystem(),
+                new RenderSystem(),
+            ]);
 
             foreach (var system in systems)
             {

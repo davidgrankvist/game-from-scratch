@@ -50,7 +50,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
             var elevatorSpawnPosition = new Vector2(tower.Position.X - 100, tower.Position.Y + 50);
             var elevator = new Entity
             {
-                Flags = EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move | EntityFlags.MovePeriodic,
+                Flags = EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move | EntityFlags.Elevator,
                 Speed = 100,
                 Velocity = new Vector2(0, -100),
                 Position = elevatorSpawnPosition,
