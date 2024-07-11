@@ -80,6 +80,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 }
             }
 
+            // TODO(bug): check that elevator collision works well with gravity
             /*
              * Phase 2 - Check if something moves into the player.
              *

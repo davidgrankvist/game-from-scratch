@@ -11,25 +11,31 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
         public void Update(SimulationContext context)
         {
+            var input = context.Tools.Input;
             var player = context.State.Repository.Player;
-            var playerSpeed = player.Speed;
-            var playerVx = 0f;
-            var playerVy = 0f;
-            if (context.Tools.Input.IsDown(KeyCode.W))
+
+            var playerVx = player.Velocity.X;
+            var playerVy = player.Velocity.Y;
+
+            var isTouchingGround = playerVy == 0;
+
+            // prevent sliding on the floor
+            if (isTouchingGround)
             {
-                playerVy = -playerSpeed;
+                playerVx = 0;
             }
-            if (context.Tools.Input.IsDown(KeyCode.A))
+
+            if (input.IsPressed(KeyCode.W) && isTouchingGround)
             {
-                playerVx = -playerSpeed;
+                playerVy = -player.JumpSpeed;
             }
-            if (context.Tools.Input.IsDown(KeyCode.S))
+            if (input.IsDown(KeyCode.A))
             {
-                playerVy = playerSpeed;
+                playerVx = -player.Speed;
             }
-            if (context.Tools.Input.IsDown(KeyCode.D))
+            if (input.IsDown(KeyCode.D))
             {
-                playerVx = playerSpeed;
+                playerVx = player.Speed;
             }
 
             player.Velocity = new Vector2(playerVx, playerVy);

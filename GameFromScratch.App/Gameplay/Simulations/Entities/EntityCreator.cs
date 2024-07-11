@@ -23,7 +23,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
             return new Entity
             {
                 Flags = EntityFlags.Player | EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move,
-                Speed = 120f,
+                Speed = 300,
+                JumpSpeed = 4 * 120,
                 Position = new Vector2(200, 200),
                 Bounds = new Vector2(50, 50),
                 Color = Color.Blue,
