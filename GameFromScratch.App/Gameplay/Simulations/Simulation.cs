@@ -18,7 +18,8 @@ namespace GameFromScratch.App.Gameplay.Simulations
         {
             systems.AddRange([
                 new SpawnSystem(),
-                new PlayerInputSystem(),
+                new ShrinkDeviceSystem(),
+                new MovementControlsSystem(),
                 new GravitySystem(),
                 new MovementSystem(),
                 new RenderSystem(),

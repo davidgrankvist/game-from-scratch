@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.Simulations.Systems
 {
-    internal class PlayerInputSystem : ISystem
+    internal class MovementControlsSystem : ISystem
     {
         public void Initialize(SimulationContext context)
         {

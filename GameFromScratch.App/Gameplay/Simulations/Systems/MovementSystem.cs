@@ -86,6 +86,12 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             {
                 ResolveMoveIntoStationaryY(moving, stationary);
             }
+
+            // resized
+            if (prevOverlapX && prevOverlapY)
+            {
+                ResolveMovingGrewIntoStationary(moving, stationary);
+            }
         }
 
         private static void ResolveMoveIntoStationaryX(Entity moving, Entity stationary)
@@ -122,6 +128,27 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
             // stop further Y movement
             moving.Velocity = new Vector2(moving.Velocity.X, 0);
+        }
+
+        private static void ResolveMovingGrewIntoStationary(Entity moving, Entity stationary)
+        {
+            var prevBounds = moving.Bounds;
+            var downScaledBounds = prevBounds * 0.01f;
+
+            var (prevOverlapX, prevOverlapY) = CheckOverlap(moving.Position, downScaledBounds, stationary.Position, stationary.Bounds);
+
+            if (!prevOverlapX)
+            {
+                // stop at stationary left edge
+                moving.Position.X = stationary.Position.X - moving.Bounds.X;
+            }
+
+            if (!prevOverlapY)
+            {
+                // stop at stationary top edge
+                moving.Position.Y = stationary.Position.Y - moving.Bounds.Y;
+            }
+
         }
     }
 }
