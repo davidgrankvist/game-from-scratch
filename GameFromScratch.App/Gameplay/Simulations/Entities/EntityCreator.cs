@@ -48,18 +48,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
                 Bounds = new Vector2(80, 100),
                 Color = Color.Green,
             };
-            var elevatorSpawnPosition = new Vector2(tower.Position.X - 100, tower.Position.Y + 50);
-            var elevator = new Entity
-            {
-                Flags = EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move | EntityFlags.Elevator,
-                Speed = 100,
-                Velocity = new Vector2(0, -100),
-                Position = elevatorSpawnPosition,
-                MoveStart = elevatorSpawnPosition,
-                MoveEnd = elevatorSpawnPosition - new Vector2(0, 100),
-                Bounds = new Vector2(70, 25),
-                Color = Color.Red,
-            };
 
             // borders
             var invisibleBorderLeft = new Entity
@@ -84,7 +72,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
             return [
                 ground,
                 tower,
-                elevator,
                 invisibleBorderLeft,
                 invisibleBorderRight,
                 invisibleBorderTop

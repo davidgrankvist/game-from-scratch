@@ -11,31 +11,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
         public void Update(SimulationContext context)
         {
-            UpdateElevatorVelocities(context);
             MoveEntities(context);
             ResolveCollisions(context);
-        }
-
-        private static void UpdateElevatorVelocities(SimulationContext context)
-        {
-            var repo = context.State.Repository;
-            var elevators = repo.Query(EntityFlags.Elevator);
-
-            foreach (var entity in elevators)
-            {
-                /*
-                 * Elevator up and down movement
-                 */
-                var py = entity.Position.Y;
-                var vy = entity.Velocity.Y;
-                // switch direction if reached start/end
-                if (py >= entity.MoveStart.Y && vy > 0 || py <= entity.MoveEnd.Y && vy < 0)
-                {
-                    vy = -vy;
-                }
-
-                entity.Velocity = new Vector2(0, vy);
-            }
         }
 
         private static void MoveEntities(SimulationContext context)
@@ -61,14 +38,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             var repo = context.State.Repository;
             var player = repo.Player;
 
-            /*
-             * Phase 1 - Check if the player moves into something stationary.
-             *
-             * This may alter both the player position and velocity.
-             */
-            var stationaryEntities = repo.Query(EntityFlags.Solid, EntityFlags.Player)
-                // Exclude moving entities, except elevators since they are X axis stationary.
-                .Where(entity => !entity.Flags.HasFlag(EntityFlags.Move) || entity.Flags.HasFlag(EntityFlags.Elevator));
+            // Check if the player moves into something stationary
+            var stationaryEntities = repo.Query(EntityFlags.Solid, EntityFlags.Player);
             foreach (var entity in stationaryEntities)
             {
                 var (overlapX, overlapY) = CheckOverlap(player.Position, player.Bounds, entity.Position, entity.Bounds);
@@ -77,26 +48,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 if (didCollide)
                 {
                     ResolveMoveIntoStationary(player, entity, context.State.DeltaTime);
-                }
-            }
-
-            // TODO(bug): check that elevator collision works well with gravity
-            /*
-             * Phase 2 - Check if something moves into the player.
-             *
-             * This may alter either of the entities, depending on who gets "pushed".
-             *
-             * Only checks elevators for now.
-             */
-            var elevators = repo.Query(EntityFlags.Solid | EntityFlags.Move | EntityFlags.Elevator, EntityFlags.Player);
-            foreach (var elevator in elevators)
-            {
-                var (overlapX, overlapY) = CheckOverlap(player.Position, player.Bounds, elevator.Position, elevator.Bounds);
-                var didCollide = overlapX && overlapY;
-
-                if (didCollide)
-                {
-                    ResolveElevatorIntoPlayer(elevator, player);
                 }
             }
         }
@@ -136,6 +87,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 ResolveMoveIntoStationaryY(moving, stationary);
             }
         }
+
         private static void ResolveMoveIntoStationaryX(Entity moving, Entity stationary)
         {
             // moved from left to right
@@ -170,26 +122,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
             // stop further Y movement
             moving.Velocity = new Vector2(moving.Velocity.X, 0);
-        }
-
-        private static void ResolveElevatorIntoPlayer(Entity elevator, Entity player)
-        {
-            /*
-             * X axis - this part is stationary and handled in earlier checks
-             * Y axis - if there is still a collision, then it must be along this axis
-             */
-
-            // moved downwards
-            if (elevator.Velocity.Y >= 0)
-            {
-                // stop elevator at player top edge
-                elevator.Position.Y = player.Position.Y - elevator.Bounds.Y;
-            }
-            else // moved upwards
-            {
-                // push player to elevator top edge
-                player.Position.Y = elevator.Position.Y - player.Bounds.Y;
-            }
         }
     }
 }

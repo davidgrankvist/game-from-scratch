@@ -14,10 +14,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
         public float Speed;
         public float JumpSpeed;
 
-        // movement - periodic
-        public Vector2 MoveStart;
-        public Vector2 MoveEnd;
-
         // body
         public Vector2 Bounds;
 

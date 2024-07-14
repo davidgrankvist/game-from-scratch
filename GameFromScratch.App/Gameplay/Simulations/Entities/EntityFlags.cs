@@ -11,7 +11,6 @@
         Solid = 1 << 0,
         Move = 1 << 1,
         Render = 1 << 2,
-        Elevator = 1 << 3,
-        Player = 1 << 4,
+        Player = 1 << 3,
     }
 }
