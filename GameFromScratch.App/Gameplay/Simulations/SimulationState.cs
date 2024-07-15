@@ -4,13 +4,15 @@ namespace GameFromScratch.App.Gameplay.Simulations
 {
     internal class SimulationState
     {
-        public float DeltaTime;
         public readonly EntityRepository Repository;
+        public float DeltaTime;
+        public float GravitySign;
 
         public SimulationState()
         {
-            DeltaTime = 0;
             Repository = new EntityRepository();
+            DeltaTime = 0;
+            GravitySign = 1;
         }
     }
 }

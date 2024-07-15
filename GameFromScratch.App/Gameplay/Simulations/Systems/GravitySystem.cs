@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using GameFromScratch.App.Framework.Input;
+using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.Simulations.Systems
 {
@@ -15,7 +16,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             var deltaTime = context.State.DeltaTime;
             var player = context.State.Repository.Player;
 
-            player.Velocity += new Vector2(0, accelerationY * deltaTime);
+            player.Velocity += new Vector2(0, accelerationY * deltaTime * context.State.GravitySign);
         }
     }
 }
