@@ -34,18 +34,37 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
         private static IEnumerable<Entity> CreateMap(Vector2 mapSize)
         {
             // map
-            var ground = new Entity
+            var towerWidth = 80;
+            var tunnelWidth = 30;
+            var gapWidth = 2 * tunnelWidth + towerWidth;
+            var groundWidth = 50;
+
+            var groundLeft = new Entity
             {
                 Flags = EntityFlags.Solid | EntityFlags.Render,
-                Position = new Vector2(0, mapSize.Y - 50),
-                Bounds = new Vector2(mapSize.X, 50),
+                Position = new Vector2(0, mapSize.Y - groundWidth),
+                Bounds = new Vector2(mapSize.X / 2 - gapWidth / 2, groundWidth),
+                Color = Color.Black,
+            };
+            var groundRight = new Entity
+            {
+                Flags = EntityFlags.Solid | EntityFlags.Render,
+                Position = new Vector2(mapSize.X / 2 + gapWidth / 2, mapSize.Y - groundWidth),
+                Bounds = new Vector2(mapSize.X / 2 + gapWidth / 2, groundWidth),
+                Color = Color.Black,
+            };
+            var groundMid = new Entity
+            {
+                Flags = EntityFlags.Solid | EntityFlags.Render,
+                Position = new Vector2(groundLeft.Bounds.X, groundLeft.Position.Y + tunnelWidth),
+                Bounds = new Vector2(gapWidth, groundWidth - tunnelWidth),
                 Color = Color.Black,
             };
             var tower = new Entity
             {
                 Flags = EntityFlags.Solid | EntityFlags.Render,
-                Position = new Vector2(ground.Position.X + ground.Bounds.X - 80, ground.Position.Y - 100),
-                Bounds = new Vector2(80, 100),
+                Position = new Vector2(groundLeft.Bounds.X + tunnelWidth, groundLeft.Position.Y - 100),
+                Bounds = new Vector2(towerWidth, 100),
                 Color = Color.Green,
             };
 
@@ -70,7 +89,9 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
             };
 
             return [
-                ground,
+                groundLeft,
+                groundRight,
+                groundMid,
                 tower,
                 invisibleBorderLeft,
                 invisibleBorderRight,
