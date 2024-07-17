@@ -1,12 +1,19 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using GameFromScratch.App.Gameplay.Simulations.Entities;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Entities
+namespace GameFromScratch.App.Gameplay.Simulations.Levels
 {
-    internal static class EntityCreator
+    internal class ConceptLevel : ILevel
     {
 
-        public static IEnumerable<Entity> CreateConceptLevel(Vector2 mapSize)
+        public IEnumerable<Entity> Create()
+        {
+            return CreateConceptLevel(LevelConstants.MAP_SIZE);
+        }
+
+
+        private static IEnumerable<Entity> CreateConceptLevel(Vector2 mapSize)
         {
             var player = CreatePlayer();
             var map = CreateMap(mapSize);
@@ -98,5 +105,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
                 invisibleBorderTop
             ];
         }
+
     }
 }

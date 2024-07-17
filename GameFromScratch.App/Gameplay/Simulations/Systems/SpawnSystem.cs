@@ -1,5 +1,4 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
-using System.Numerics;
+﻿using GameFromScratch.App.Gameplay.Simulations.Levels;
 
 namespace GameFromScratch.App.Gameplay.Simulations.Systems
 {
@@ -7,11 +6,10 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
     {
         public void Initialize(SimulationContext context)
         {
-            var mapSize = new Vector2(900, 400);
-            var level = EntityCreator.CreateConceptLevel(mapSize);
+            var level = new ConceptLevel();
 
             var repo = context.State.Repository;
-            repo.AddRange(level);
+            repo.AddRange(level.Create());
         }
 
         public void Update(SimulationContext context)
