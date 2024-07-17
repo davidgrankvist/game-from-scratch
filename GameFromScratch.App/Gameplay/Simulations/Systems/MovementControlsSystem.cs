@@ -27,7 +27,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
             if (input.IsPressed(KeyCode.W) && isTouchingGround)
             {
-                playerVy = -player.JumpSpeed;
+                playerVy = -player.JumpSpeed * context.State.GravitySign;
             }
             if (input.IsDown(KeyCode.A))
             {
