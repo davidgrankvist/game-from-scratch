@@ -7,7 +7,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
     {
         private const float minScale = 0.5f;
         private float scale = 1;
-        private const float scaleStep = 0.005f;
+        private const float scaleStep = 0.5f;
 
         private Vector2 boundsStart;
         private float speedStart;
@@ -28,7 +28,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 
             if (input.IsDown(KeyCode.MouseLeft))
             {
-                scale = MathF.Max(scale - scaleStep, minScale);
+                scale = MathF.Max(scale - scaleStep * context.State.DeltaTime, minScale);
                 didScale = true;
             }
 
