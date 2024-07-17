@@ -14,3 +14,5 @@ dotnet_diagnostic.IDE0054.severity = none
 dotnet_diagnostic.IDE0074.severity = none
 # switch expressions
 dotnet_diagnostic.IDE0066.severity = none
+# simplified new expressions
+dotnet_diagnostic.IDE0090.severity = none
