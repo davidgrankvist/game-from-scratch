@@ -6,6 +6,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
 {
     internal class GravityInverterDeviceDemoLevel : ILevel
     {
+        public string Name => "Gravity inverter demo";
+
         public IEnumerable<Entity> Create()
         {
             var mapSize = LevelUtils.MAP_SIZE;

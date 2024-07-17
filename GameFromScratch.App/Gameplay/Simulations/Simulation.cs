@@ -1,5 +1,5 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Systems;
-using System.Drawing;
+﻿using GameFromScratch.App.Gameplay.Simulations.Levels;
+using GameFromScratch.App.Gameplay.Simulations.Systems;
 
 namespace GameFromScratch.App.Gameplay.Simulations
 {
@@ -14,10 +14,10 @@ namespace GameFromScratch.App.Gameplay.Simulations
             systems = new List<ISystem>();
         }
 
-        public void Initialize()
+        public void Initialize(ILevel level)
         {
             systems.AddRange([
-                new SpawnSystem(),
+                new SpawnSystem(level),
                 new ShrinkDeviceSystem(),
                 new MovementControlsSystem(),
                 new GravityInverterDeviceSystem(),
@@ -35,7 +35,6 @@ namespace GameFromScratch.App.Gameplay.Simulations
         public void Update(float deltaTimeSeconds)
         {
             context.State.DeltaTime = deltaTimeSeconds;
-            context.Tools.Graphics.Fill(Color.White);
 
             foreach (var system in systems)
             {

@@ -4,8 +4,10 @@ using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.Simulations.Levels
 {
-    internal class ShrinkDeviceDemo : ILevel
+    internal class ShrinkDeviceDemoLevel : ILevel
     {
+        public string Name => "Shrinker demo";
+
         public IEnumerable<Entity> Create()
         {
             var mapSize = LevelUtils.MAP_SIZE;

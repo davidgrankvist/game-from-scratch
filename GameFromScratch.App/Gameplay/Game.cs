@@ -3,6 +3,7 @@ using GameFromScratch.App.Framework.Fps;
 using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Gameplay.Simulations;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace GameFromScratch.App.Gameplay
 {
@@ -16,9 +17,13 @@ namespace GameFromScratch.App.Gameplay
         private const int targetFps = 60;
         private const int fpsSampleWindow = 100;
 
+        // game modes
         private readonly Simulation simulation;
+        private readonly LevelSelector levelSelector;
 
         private readonly bool debugMode;
+
+        private bool didInitializeLevel = false;
 
         public Game(IWindowManager windowManager, IGraphics2D graphics, Camera2D camera, bool debugMode)
         {
@@ -29,6 +34,7 @@ namespace GameFromScratch.App.Gameplay
             fpsSampler = new FpsSampler(fpsSampleWindow);
 
             simulation = new Simulation(new SimulationTools(graphics, windowManager.Input, camera));
+            levelSelector = new LevelSelector(windowManager.Input);
 
             this.debugMode = debugMode;
         }
@@ -36,7 +42,6 @@ namespace GameFromScratch.App.Gameplay
         public void Run()
         {
             windowManager.CreateWindow();
-            simulation.Initialize();
 
             var frameTimer = new Stopwatch();
 
@@ -45,7 +50,10 @@ namespace GameFromScratch.App.Gameplay
                 windowManager.ProcessMessages();
                 fpsThrottler.SleepUntilNextFrame();
 
-                simulation.Update((float)frameTimer.Elapsed.TotalSeconds);
+                graphics.Fill(Color.White);
+
+                RunGameModeFrame((float)frameTimer.Elapsed.TotalSeconds);
+
                 graphics.Commit();
                 windowManager.Input.Refresh();
 
@@ -61,6 +69,23 @@ namespace GameFromScratch.App.Gameplay
             {
                 fpsSampler.Sample();
                 Console.WriteLine($"FPS: {fpsSampler.Fps}");
+            }
+        }
+
+        private void RunGameModeFrame(float deltaTimeSeconds)
+        {
+            if (didInitializeLevel)
+            {
+                simulation.Update(deltaTimeSeconds);
+            }
+            else
+            {
+                levelSelector.Update();
+                if (levelSelector.IsReady)
+                {
+                    simulation.Initialize(levelSelector.SelectedLevel);
+                    didInitializeLevel = true;
+                }
             }
         }
     }
