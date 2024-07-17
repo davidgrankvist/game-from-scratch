@@ -12,5 +12,6 @@
         Move = 1 << 1,
         Render = 1 << 2,
         Player = 1 << 3,
+        Goal = 1 << 4,
     }
 }

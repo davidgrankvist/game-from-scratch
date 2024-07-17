@@ -48,6 +48,11 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 if (didCollide)
                 {
                     ResolveMoveIntoStationary(player, entity, context.State.DeltaTime);
+
+                    if (entity.Flags.HasFlag(EntityFlags.Goal))
+                    {
+                        context.State.CompletedLevel = true;
+                    }
                 }
             }
         }

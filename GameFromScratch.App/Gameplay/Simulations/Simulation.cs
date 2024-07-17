@@ -5,10 +5,20 @@ namespace GameFromScratch.App.Gameplay.Simulations
 {
     internal class Simulation
     {
-        private readonly SimulationContext context;
-        private readonly List<ISystem> systems;
+        private readonly SimulationTools tools;
+        private SimulationContext context;
+        private List<ISystem> systems;
+
+        public bool IsDone { get => context.State.CompletedLevel; }
 
         public Simulation(SimulationTools tools)
+        {
+            this.tools = tools;
+            context = new SimulationContext(tools);
+            systems = new List<ISystem>();
+        }
+
+        private void Reset()
         {
             context = new SimulationContext(tools);
             systems = new List<ISystem>();
@@ -16,6 +26,11 @@ namespace GameFromScratch.App.Gameplay.Simulations
 
         public void Initialize(ILevel level)
         {
+            if (IsDone)
+            {
+                Reset();
+            }
+
             systems.AddRange([
                 new SpawnSystem(level),
                 new ShrinkDeviceSystem(),
@@ -35,10 +50,16 @@ namespace GameFromScratch.App.Gameplay.Simulations
         public void Update(float deltaTimeSeconds)
         {
             context.State.DeltaTime = deltaTimeSeconds;
+            var prevIsDone = IsDone;
 
             foreach (var system in systems)
             {
                 system.Update(context);
+            }
+
+            if (IsDone && !prevIsDone)
+            {
+                Console.WriteLine("Level completed!");
             }
         }
     }

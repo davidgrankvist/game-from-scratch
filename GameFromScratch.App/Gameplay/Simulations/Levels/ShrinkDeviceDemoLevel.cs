@@ -35,10 +35,13 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
 
             var player = LevelUtils.CreatePlayer();
 
+            var goal = LevelUtils.CreateGoal(new Vector2(mapSize.X - 75, ground.Position.Y - 50));
+
             return [
                 ground,
                 flyingTower,
                 player,
+                goal,
             ];
         }
     }

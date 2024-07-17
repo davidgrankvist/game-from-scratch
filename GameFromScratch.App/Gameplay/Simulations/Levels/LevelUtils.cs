@@ -21,5 +21,16 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
                 Color = Color.Blue,
             };
         }
+
+        public static Entity CreateGoal(Vector2 position)
+        {
+            return new Entity
+            {
+                Flags = EntityFlags.Goal | EntityFlags.Solid | EntityFlags.Render,
+                Position = position,
+                Bounds = new Vector2(50, 50),
+                Color = Color.Gold,
+            };
+        }
     }
 }

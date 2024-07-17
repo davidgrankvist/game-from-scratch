@@ -27,6 +27,13 @@ namespace GameFromScratch.App.Gameplay.Simulations
             isReady = false;
         }
 
+        public void Reset()
+        {
+            selection = 0;
+            didPrintInitialSelection = false;
+            isReady = false;
+        }
+
         public void Update()
         {
             if (!didPrintInitialSelection) 

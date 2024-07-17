@@ -7,12 +7,14 @@ namespace GameFromScratch.App.Gameplay.Simulations
         public readonly EntityRepository Repository;
         public float DeltaTime;
         public float GravitySign;
+        public bool CompletedLevel;
 
         public SimulationState()
         {
             Repository = new EntityRepository();
             DeltaTime = 0;
             GravitySign = 1;
+            CompletedLevel = false;
         }
     }
 }

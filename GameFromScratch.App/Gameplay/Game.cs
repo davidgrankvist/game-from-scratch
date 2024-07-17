@@ -77,6 +77,11 @@ namespace GameFromScratch.App.Gameplay
             if (didInitializeLevel)
             {
                 simulation.Update(deltaTimeSeconds);
+                if (simulation.IsDone)
+                {
+                    levelSelector.Reset();
+                    didInitializeLevel = false;
+                }
             }
             else
             {
