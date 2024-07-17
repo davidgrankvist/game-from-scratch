@@ -6,65 +6,35 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
 {
     internal class ConceptLevel : ILevel
     {
-
         public IEnumerable<Entity> Create()
         {
-            return CreateConceptLevel(LevelConstants.MAP_SIZE);
-        }
+            var mapSize = LevelUtils.MAP_SIZE;
 
-
-        private static IEnumerable<Entity> CreateConceptLevel(Vector2 mapSize)
-        {
-            var player = CreatePlayer();
-            var map = CreateMap(mapSize);
-
-            yield return player;
-            foreach (var entity in map)
-            {
-                yield return entity;
-            }
-        }
-
-        private static Entity CreatePlayer()
-        {
-            return new Entity
-            {
-                Flags = EntityFlags.Player | EntityFlags.Solid | EntityFlags.Render | EntityFlags.Move,
-                Speed = 300,
-                JumpSpeed = 4 * 120,
-                Position = new Vector2(200, 200),
-                Bounds = new Vector2(50, 50),
-                Color = Color.Blue,
-            };
-        }
-
-        private static IEnumerable<Entity> CreateMap(Vector2 mapSize)
-        {
             // map
             var towerWidth = 80;
             var tunnelWidth = 30;
             var gapWidth = 2 * tunnelWidth + towerWidth;
-            var groundWidth = 50;
+            var groundHeight = 50;
 
             var groundLeft = new Entity
             {
                 Flags = EntityFlags.Solid | EntityFlags.Render,
-                Position = new Vector2(0, mapSize.Y - groundWidth),
-                Bounds = new Vector2(mapSize.X / 2 - gapWidth / 2, groundWidth),
+                Position = new Vector2(0, mapSize.Y - groundHeight),
+                Bounds = new Vector2(mapSize.X / 2 - gapWidth / 2, groundHeight),
                 Color = Color.Black,
             };
             var groundRight = new Entity
             {
                 Flags = EntityFlags.Solid | EntityFlags.Render,
-                Position = new Vector2(mapSize.X / 2 + gapWidth / 2, mapSize.Y - groundWidth),
-                Bounds = new Vector2(mapSize.X / 2 + gapWidth / 2, groundWidth),
+                Position = new Vector2(mapSize.X / 2 + gapWidth / 2, mapSize.Y - groundHeight),
+                Bounds = new Vector2(mapSize.X / 2 + gapWidth / 2, groundHeight),
                 Color = Color.Black,
             };
             var groundMid = new Entity
             {
                 Flags = EntityFlags.Solid | EntityFlags.Render,
                 Position = new Vector2(groundLeft.Bounds.X, groundLeft.Position.Y + tunnelWidth),
-                Bounds = new Vector2(gapWidth, groundWidth - tunnelWidth),
+                Bounds = new Vector2(gapWidth, groundHeight - tunnelWidth),
                 Color = Color.Black,
             };
             var tower = new Entity
@@ -95,6 +65,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
                 Bounds = new Vector2(mapSize.X, 10),
             };
 
+            var player = LevelUtils.CreatePlayer();
+
             return [
                 groundLeft,
                 groundRight,
@@ -102,7 +74,8 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
                 tower,
                 invisibleBorderLeft,
                 invisibleBorderRight,
-                invisibleBorderTop
+                invisibleBorderTop,
+                player,
             ];
         }
 
