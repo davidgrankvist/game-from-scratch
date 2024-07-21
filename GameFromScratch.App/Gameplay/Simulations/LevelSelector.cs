@@ -9,6 +9,7 @@ namespace GameFromScratch.App.Gameplay.Simulations
         private static readonly ILevel[] levels = [
             new ShrinkDeviceDemoLevel(),
             new GravityInverterDeviceDemoLevel(),
+            new MapInverterDeviceDemoLevel(),
         ];
 
         public ILevel SelectedLevel { get => levels[selection]; }

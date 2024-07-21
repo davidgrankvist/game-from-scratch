@@ -35,6 +35,7 @@ namespace GameFromScratch.App.Gameplay.Simulations
                 new SpawnSystem(level),
                 new ShrinkDeviceSystem(),
                 new MovementControlsSystem(),
+                new MapInverterDeviceSystem(),
                 new GravityInverterDeviceSystem(),
                 new GravitySystem(),
                 new MovementSystem(),
