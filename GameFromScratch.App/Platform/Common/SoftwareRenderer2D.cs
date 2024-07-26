@@ -1,8 +1,10 @@
-﻿using GameFromScratch.App.Framework.Maths;
+﻿using GameFromScratch.App.Framework;
+using GameFromScratch.App.Framework.Graphics;
+using GameFromScratch.App.Framework.Maths;
 using System.Drawing;
 using System.Numerics;
 
-namespace GameFromScratch.App.Framework.Graphics
+namespace GameFromScratch.App.Platform.Common
 {
     internal abstract class SoftwareRenderer2D : IGraphics2D
     {
@@ -11,11 +13,16 @@ namespace GameFromScratch.App.Framework.Graphics
         protected int Height;
 
         private readonly Camera2D camera;
+        private readonly TextRenderer textRenderer;
+        private bool didInitText;
+        private int textBaselineY;
+        private int textOffsetLeft;
 
         public SoftwareRenderer2D(Camera2D camera)
         {
             this.camera = camera;
             bitmap = Array.Empty<int>();
+            textRenderer = new TextRenderer();
         }
 
         public virtual void Resize(int width, int height)
@@ -39,9 +46,15 @@ namespace GameFromScratch.App.Framework.Graphics
             bitmap[ToIndex(x, y)] = color.ToArgb();
         }
 
+
         private int ToIndex(int x, int y)
         {
             return y * Width + x;
+        }
+
+        private Color GetPixel(int x, int y)
+        {
+            return Color.FromArgb(bitmap[ToIndex(x, y)]);
         }
 
         public void DrawRectangle(Vector2 position, float width, float height, Color color)
@@ -203,6 +216,101 @@ namespace GameFromScratch.App.Framework.Graphics
                     }
                 }
             }
+        }
+
+        /* TODO(investigate): maybe have two versions:
+         * - draw in world coordinate (entity labels)
+         * - draw at pixel position (ui elements)
+         */
+        public void DrawText(string text, int fontSize, Color color, Vector2 position)
+        {
+            if (!didInitText)
+            {
+                textRenderer.LoadFont();
+                didInitText = true;
+            }
+
+            if (textRenderer.FontSize != fontSize)
+            {
+                textRenderer.SetFontSize(fontSize);
+            }
+
+            var characterTopLeft = camera.ToPixel(position);
+            var isFirst = true;
+
+            foreach (var character in text)
+            {
+                var glyph = textRenderer.DrawCharacter(character);
+                DrawCharacterGlyph(glyph, characterTopLeft, color, isFirst);
+
+                var spacing = glyph.AdvanceX;
+                characterTopLeft += new Vector2Int(spacing, 0);
+
+                isFirst = false;
+            }
+        }
+
+        private void DrawCharacterGlyph(GlyphBitmap glyph, Vector2Int firstCharacterTopLeftPixel, Color color, bool isFirst)
+        {
+            if (isFirst)
+            {
+                // make sure subsequent characters are positioned relative to the first character top left
+                textBaselineY = firstCharacterTopLeftPixel.Y + glyph.Top;
+                textOffsetLeft = glyph.Left;
+            }
+
+            var glyphTopLeftX = firstCharacterTopLeftPixel.X + glyph.Left - textOffsetLeft;
+            var glyphTopLeftY = textBaselineY - glyph.Top;
+
+            var pxStart = ClampInt(glyphTopLeftX, 0, Width);
+            var pyStart = ClampInt(glyphTopLeftY, 0, Height);
+            var pxEnd = ClampInt(pxStart + glyph.Width, 0, Width);
+            var pyEnd = ClampInt(pyStart + glyph.Height, 0, Height);
+
+            for (var ix = pxStart; ix < pxEnd; ix++)
+            {
+                for (var iy = pyStart; iy < pyEnd; iy++)
+                {
+                    // position within the glyph's own bitmap
+                    var glyphX = ix - pxStart;
+                    var glyphY = iy - pyStart;
+
+                    var alpha = glyph.Buffer[glyphY * glyph.Width + glyphX];
+                    if (alpha > 0)
+                    {
+                        // Handle alpha values by blending with the background color.
+                        var backgroundColor = GetPixel(ix, iy);
+                        var blendedColor = Blend(backgroundColor, color, alpha);
+                        SetPixel(ix, iy, blendedColor);
+                    }
+                }
+            }
+        }
+
+        private static Color Blend(Color source, Color dest, byte alpha)
+        {
+            var alphaf = alpha / 255f;
+
+            var r = LerpB(source.R, dest.R, alphaf);
+            var g = LerpB(source.G, dest.G, alphaf);
+            var b = LerpB(source.B, dest.B, alphaf);
+
+            return Color.FromArgb(r, g, b);
+        }
+
+        private static float Lerp(float x, float y, float t)
+        {
+            return (1 - t) * x + t * y;
+        }
+
+        private static byte LerpB(float x, float y, float t)
+        {
+            return (byte)MathF.Round(Lerp(x, y, t));
+        }
+
+        private static int ClampInt(int x, int min, int max)
+        {
+            return Math.Min(Math.Max(x, min), max);
         }
     }
 }

@@ -24,5 +24,7 @@ namespace GameFromScratch.App.Framework.Graphics
         public void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color);
 
         public void DrawRectangleRotated(Vector2 position, float width, float height, Color color, float angle, Vector2 origin);
+
+        public void DrawText(string text, int fontSize, Color color, Vector2 position);
     }
 }

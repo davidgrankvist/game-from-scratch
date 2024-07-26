@@ -1,5 +1,5 @@
 ﻿using GameFromScratch.App.Framework;
-using GameFromScratch.App.Framework.Graphics;
+using GameFromScratch.App.Platform.Common;
 using System.Runtime.Versioning;
 using Windows.Win32;
 using Windows.Win32.Foundation;
