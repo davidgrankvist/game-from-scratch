@@ -20,5 +20,14 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\Fonts\LiberationSans-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Licenses\License-Liberation.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
 </Project>
