@@ -5,6 +5,9 @@ using static FreeTypeSharp.FT_LOAD;
 
 namespace GameFromScratch.App.Platform.Common
 {
+    /// <summary>
+    /// Renders individual character glyphs.
+    /// </summary>
     internal unsafe class TextRenderer
     {
         private FT_LibraryRec_* lib;
@@ -13,14 +16,17 @@ namespace GameFromScratch.App.Platform.Common
         private bool didInit;
         private int fontSize;
         private string fontName;
+        private readonly Dictionary<(char Character, int FontSize), GlyphBitmap> glyphCache;
 
         public int FontSize { get => fontSize; }
+
 
         public TextRenderer()
         {
             didInit = false;
             fontSize = 16;
             fontName = "LiberationSans-Regular";
+            glyphCache = new();
         }
 
         private unsafe void Initialize()
@@ -62,7 +68,11 @@ namespace GameFromScratch.App.Platform.Common
 
         public GlyphBitmap DrawCharacter(char character)
         {
-            // TODO(performance): add cache to avoid extra rendering
+            if (glyphCache.TryGetValue((character, fontSize), out var glyphBitmap))
+            {
+                return glyphBitmap;
+            }
+
             var error = FT_Load_Char(face, character, FT_LOAD_RENDER);
             ThrowIfNotOk(error, "Failed to draw character");
 
@@ -75,7 +85,7 @@ namespace GameFromScratch.App.Platform.Common
                 output[i] = glyphPixelData[i];
             }
 
-            return new GlyphBitmap
+            var result = new GlyphBitmap
             {
                 Buffer = output,
                 Width = (int)bitmap.width,
@@ -84,6 +94,10 @@ namespace GameFromScratch.App.Platform.Common
                 Top = face->glyph->bitmap_top,
                 Left = face->glyph->bitmap_left,
             };
+            // TODO(leak): if a lot of different font sizes are used, this will keep growing
+            glyphCache.Add((character, fontSize), result);
+
+            return result;
         }
 
         private static void ThrowIfNotOk(FT_Error error, string message)
