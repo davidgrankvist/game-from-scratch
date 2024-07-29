@@ -4,6 +4,7 @@ using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Gameplay.Simulations;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay
 {
@@ -11,6 +12,7 @@ namespace GameFromScratch.App.Gameplay
     {
         private readonly IWindowManager windowManager;
         private readonly IGraphics2D graphics;
+        private readonly Camera2D camera;
 
         private readonly FpsThrottler fpsThrottler;
         private readonly FpsSampler fpsSampler;
@@ -29,6 +31,7 @@ namespace GameFromScratch.App.Gameplay
         {
             this.windowManager = windowManager;
             this.graphics = graphics;
+            this.camera = camera;
 
             fpsThrottler = new FpsThrottler(targetFps, windowManager.Sleeper);
             fpsSampler = new FpsSampler(fpsSampleWindow);
@@ -53,22 +56,21 @@ namespace GameFromScratch.App.Gameplay
                 graphics.Fill(Color.White);
 
                 RunGameModeFrame((float)frameTimer.Elapsed.TotalSeconds);
+                DrawFpsOverlay();
 
                 graphics.Commit();
                 windowManager.Input.Refresh();
-
-                PrintFps();
 
                 frameTimer.Restart();
             }
         }
 
-        private void PrintFps()
+        private void DrawFpsOverlay()
         {
             if (debugMode)
             {
                 fpsSampler.Sample();
-                Console.WriteLine($"FPS: {fpsSampler.Fps}");
+                graphics.DrawText($"FPS: {MathF.Round(fpsSampler.Fps, 3)}", 16, Color.Green, camera.ViewportTopLeft + new Vector2(10, 10));
             }
         }
 

@@ -6,6 +6,7 @@ namespace GameFromScratch.App.Framework
     internal class Camera2D
     {
         private Vector2 viewportTopLeft;
+        public Vector2 ViewportTopLeft { get => viewportTopLeft; }
         // TODO(feature): add scaling factor so that world units can differ from pixels
 
         public Camera2D()
