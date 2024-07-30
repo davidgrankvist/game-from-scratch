@@ -36,8 +36,9 @@ namespace GameFromScratch.App.Gameplay
             fpsThrottler = new FpsThrottler(targetFps, windowManager.Sleeper);
             fpsSampler = new FpsSampler(fpsSampleWindow);
 
-            simulation = new Simulation(new SimulationTools(graphics, windowManager.Input, camera));
-            levelSelector = new LevelSelector(windowManager.Input);
+            var tools = new SimulationTools(graphics, windowManager.Input, camera);
+            simulation = new Simulation(tools);
+            levelSelector = new LevelSelector(tools);
 
             this.debugMode = debugMode;
         }
