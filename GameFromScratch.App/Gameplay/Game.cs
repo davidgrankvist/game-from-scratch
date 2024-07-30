@@ -70,7 +70,9 @@ namespace GameFromScratch.App.Gameplay
             if (debugMode)
             {
                 fpsSampler.Sample();
-                graphics.DrawText($"FPS: {MathF.Round(fpsSampler.Fps, 3)}", 16, Color.Green, camera.ViewportTopLeft + new Vector2(10, 10));
+                graphics.PixelMode = true;
+                graphics.DrawText($"FPS: {MathF.Round(fpsSampler.Fps, 3)}", 16, Color.Green, new Vector2(10, 10));
+                graphics.PixelMode = false;
             }
         }
 

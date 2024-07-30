@@ -18,6 +18,8 @@ namespace GameFromScratch.App.Platform.Common
         private int textBaselineY;
         private int textOffsetLeft;
 
+        public bool PixelMode { get => camera.PixelMode; set => camera.PixelMode = value; }
+
         public SoftwareRenderer2D(Camera2D camera)
         {
             this.camera = camera;
@@ -45,7 +47,6 @@ namespace GameFromScratch.App.Platform.Common
         {
             bitmap[ToIndex(x, y)] = color.ToArgb();
         }
-
 
         private int ToIndex(int x, int y)
         {
@@ -218,10 +219,6 @@ namespace GameFromScratch.App.Platform.Common
             }
         }
 
-        /* TODO(investigate): maybe have two versions:
-         * - draw in world coordinate (entity labels)
-         * - draw at pixel position (ui elements)
-         */
         public void DrawText(string text, int fontSize, Color color, Vector2 position)
         {
             if (!didInitText)

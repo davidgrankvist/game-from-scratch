@@ -26,5 +26,11 @@ namespace GameFromScratch.App.Framework.Graphics
         public void DrawRectangleRotated(Vector2 position, float width, float height, Color color, float angle, Vector2 origin);
 
         public void DrawText(string text, int fontSize, Color color, Vector2 position);
+
+        /// <summary>
+        /// Treat coordinates as pixels rather then world coordinates. Convenience accessor to set
+        /// the pixel mode of the underlying camera.
+        /// </summary>
+        public bool PixelMode { get; set; }
     }
 }
