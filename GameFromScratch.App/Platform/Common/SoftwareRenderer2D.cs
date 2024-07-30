@@ -259,10 +259,10 @@ namespace GameFromScratch.App.Platform.Common
             var glyphTopLeftX = firstCharacterTopLeftPixel.X + glyph.Left - textOffsetLeft;
             var glyphTopLeftY = textBaselineY - glyph.Top;
 
-            var pxStart = ClampInt(glyphTopLeftX, 0, Width);
-            var pyStart = ClampInt(glyphTopLeftY, 0, Height);
-            var pxEnd = ClampInt(pxStart + glyph.Width, 0, Width);
-            var pyEnd = ClampInt(pyStart + glyph.Height, 0, Height);
+            var pxStart = MathExtensions.Clamp(glyphTopLeftX, 0, Width);
+            var pyStart = MathExtensions.Clamp(glyphTopLeftY, 0, Height);
+            var pxEnd = MathExtensions.Clamp(pxStart + glyph.Width, 0, Width);
+            var pyEnd = MathExtensions.Clamp(pyStart + glyph.Height, 0, Height);
 
             for (var ix = pxStart; ix < pxEnd; ix++)
             {
@@ -288,26 +288,16 @@ namespace GameFromScratch.App.Platform.Common
         {
             var alphaf = alpha / 255f;
 
-            var r = LerpB(source.R, dest.R, alphaf);
-            var g = LerpB(source.G, dest.G, alphaf);
-            var b = LerpB(source.B, dest.B, alphaf);
+            var r = LerpByte(source.R, dest.R, alphaf);
+            var g = LerpByte(source.G, dest.G, alphaf);
+            var b = LerpByte(source.B, dest.B, alphaf);
 
             return Color.FromArgb(r, g, b);
         }
 
-        private static float Lerp(float x, float y, float t)
+        private static byte LerpByte(byte x, byte y, float t)
         {
-            return (1 - t) * x + t * y;
-        }
-
-        private static byte LerpB(float x, float y, float t)
-        {
-            return (byte)MathF.Round(Lerp(x, y, t));
-        }
-
-        private static int ClampInt(int x, int min, int max)
-        {
-            return Math.Min(Math.Max(x, min), max);
+            return (byte)MathF.Round(MathExtensions.Lerp(x, y, t));
         }
     }
 }

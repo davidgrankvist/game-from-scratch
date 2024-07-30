@@ -21,5 +21,15 @@
             }
             return m;
         }
+
+        public static float Lerp(float x, float y, float t)
+        {
+            return (1 - t) * x + t * y;
+        }
+
+        public static int Clamp(int x, int min, int max)
+        {
+            return Math.Min(Math.Max(x, min), max);
+        }
     }
 }
