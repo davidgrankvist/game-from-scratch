@@ -16,17 +16,19 @@ namespace GameFromScratch.App.Platform.Common
         private bool didInit;
         private int fontSize;
         private string fontName;
-        private readonly Dictionary<(char Character, int FontSize), GlyphBitmap> glyphCache;
+
+        private readonly LruCache<(char Character, int FontSize), GlyphBitmap> glyphCache;
+        // TODO(investigate): handwaved capacity
+        private const int glyphCacheCapacity = 256;
 
         public int FontSize { get => fontSize; }
-
 
         public TextRenderer()
         {
             didInit = false;
             fontSize = 16;
             fontName = "LiberationSans-Regular";
-            glyphCache = new();
+            glyphCache = new(glyphCacheCapacity);
         }
 
         private unsafe void Initialize()
@@ -94,7 +96,7 @@ namespace GameFromScratch.App.Platform.Common
                 Top = face->glyph->bitmap_top,
                 Left = face->glyph->bitmap_left,
             };
-            // TODO(leak): if a lot of different font sizes are used, this will keep growing
+
             glyphCache.Add((character, fontSize), result);
 
             return result;
