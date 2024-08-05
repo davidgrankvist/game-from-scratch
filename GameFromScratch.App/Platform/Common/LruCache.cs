@@ -1,6 +1,6 @@
 ﻿namespace GameFromScratch.App.Platform.Common
 {
-    internal class LruCache<TKey, TValue>
+    public class LruCache<TKey, TValue>
         where TKey: notnull
     {
         private readonly Dictionary<TKey, Node> cache;
@@ -20,7 +20,7 @@
             tail = null;
         }
 
-        public bool TryGet(TKey key, out TValue? value)
+        public bool TryGetValue(TKey key, out TValue? value)
         {
             if (cache.TryGetValue(key, out var node))
             {
