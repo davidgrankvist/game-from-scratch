@@ -16,3 +16,11 @@ I don't know yet.
 You can browse the Handmade Hero episodes [here](https://hero.handmade.network/episode/code).
 
 For Win32 basics, check out [this guide](https://learn.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows) in the Microsoft documentation.
+
+## License
+
+The source code is licensed under the [MIT license](./LICENSE).
+
+The game assets are licensed under [CC BY 4.0](./LICENSE-ASSETS) (see the separate copyright notice [here](./COPYRIGHT-ASSETS)).
+
+Third party asset licenses can be found [here](./GameFromScratch.App/Assets/Licenses).
