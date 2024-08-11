@@ -20,9 +20,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
                 graphics.DrawRectangle(entity.Position, entity.Bounds.X, entity.Bounds.Y, entity.Color);
             }
             var player = repo.Player;
-            // TODO: keep rectangle until shrinking device works with textures
-            graphics.DrawRectangle(player.Position, player.Bounds.X, player.Bounds.Y, player.Color);
-            graphics.DrawTexture(player.TextureName, player.Position);
+            graphics.DrawTexture(player.TextureName, player.Position, player.Bounds.X, player.Bounds.Y);
         }
     }
 }

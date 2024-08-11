@@ -33,6 +33,14 @@ namespace GameFromScratch.App.Framework.Graphics
         /// </summary>
         public bool PixelMode { get; set; }
 
+        /// <summary>
+        /// Draws a texture in its original dimensions.
+        /// </summary>
         public void DrawTexture(string textureName, Vector2 position);
+
+        /// <summary>
+        /// Draws a texture, scaling it to the specified dimensions.
+        /// </summary>
+        public void DrawTexture(string textureName, Vector2 position, float width, float height);
     }
 }

@@ -308,9 +308,22 @@ namespace GameFromScratch.App.Platform.Common
         public void DrawTexture(string textureName, Vector2 position)
         {
             var texture = textureManager.GetTexture(textureName);
+            DrawTexture(texture, position, texture.Width, texture.Height);
+        }
+
+        public void DrawTexture(string textureName, Vector2 position, float width, float height)
+        {
+            var texture = textureManager.GetTexture(textureName);
+            DrawTexture(texture, position, width, height);
+        }
+
+        private void DrawTexture(Texture texture, Vector2 position, float width, float height)
+        {
+            var widthScale = width / texture.Width;
+            var heightScale = height / texture.Height;
 
             var topLeftPixel = camera.ToPixel(position);
-            var bottomRightPixel = camera.ToPixel(position + new Vector2(texture.Width, texture.Height));
+            var bottomRightPixel = camera.ToPixel(position + new Vector2(width, height));
 
             // visible part of rectangle
             var pxStart = Math.Max(topLeftPixel.X, 0);
@@ -322,10 +335,15 @@ namespace GameFromScratch.App.Platform.Common
             {
                 for (var iy = pyStart; iy < pyEnd; iy++)
                 {
-                    var textureX = ix - pxStart;
-                    var textureY = iy - pyStart;
+                    // position within the scaled texture
+                    var scaledTextureX = ix - pxStart;
+                    var scaledTextureY = iy - pyStart;
 
-                    var color = Color.FromArgb(texture.Buffer[textureY * texture.Width + textureX]);
+                    // nearest actual pixel within the original texture
+                    var originalTextureX = MathExtensions.Clamp((int)MathF.Round(scaledTextureX / widthScale), 0, texture.Width - 1);
+                    var originalTextureY = MathExtensions.Clamp((int)MathF.Round(scaledTextureY / heightScale), 0, texture.Height - 1);
+
+                    var color = Color.FromArgb(texture.Buffer[originalTextureY * texture.Width + originalTextureX]);
                     if (color.A > 0)
                     {
                         // Handle alpha values by blending with the background color.
@@ -336,5 +354,6 @@ namespace GameFromScratch.App.Platform.Common
                 }
             }
         }
+
     }
 }
