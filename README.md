@@ -11,6 +11,10 @@ This project is inspired by Casey Muratori's excellent [Handmade Hero](https://h
 
 I don't know yet.
 
+### Architecture
+
+See [Architecture.md](./Docs/Architecture.md).
+
 ## Resources
 
 You can browse the Handmade Hero episodes [here](https://hero.handmade.network/episode/code).
