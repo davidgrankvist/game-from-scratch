@@ -17,8 +17,9 @@ namespace GameFromScratch.App.Gameplay.Simulations.Levels
                 Speed = 300,
                 JumpSpeed = 4 * 120,
                 Position = new Vector2(200, 200),
-                Bounds = new Vector2(50, 50),
+                Bounds = new Vector2(27, 55), // player texture size
                 Color = Color.Blue,
+                TextureName = "player",
             };
         }
 

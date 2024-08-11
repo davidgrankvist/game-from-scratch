@@ -2,6 +2,7 @@
 using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Framework.Maths;
 using GameFromScratch.App.Platform.Common.Text;
+using GameFromScratch.App.Platform.Common.Textures;
 using System.Drawing;
 using System.Numerics;
 
@@ -14,18 +15,21 @@ namespace GameFromScratch.App.Platform.Common
         protected int Height;
 
         private readonly Camera2D camera;
+        public bool PixelMode { get => camera.PixelMode; set => camera.PixelMode = value; }
+
         private readonly TextRenderer textRenderer;
         private bool didInitText;
         private int textBaselineY;
         private int textOffsetLeft;
 
-        public bool PixelMode { get => camera.PixelMode; set => camera.PixelMode = value; }
+        private readonly TextureManager textureManager;
 
         public SoftwareRenderer2D(Camera2D camera)
         {
             this.camera = camera;
             bitmap = Array.Empty<int>();
             textRenderer = new TextRenderer();
+            textureManager = new TextureManager();
         }
 
         public virtual void Resize(int width, int height)
@@ -299,6 +303,38 @@ namespace GameFromScratch.App.Platform.Common
         private static byte LerpByte(byte x, byte y, float t)
         {
             return (byte)MathF.Round(MathExtensions.Lerp(x, y, t));
+        }
+
+        public void DrawTexture(string textureName, Vector2 position)
+        {
+            var texture = textureManager.GetTexture(textureName);
+
+            var topLeftPixel = camera.ToPixel(position);
+            var bottomRightPixel = camera.ToPixel(position + new Vector2(texture.Width, texture.Height));
+
+            // visible part of rectangle
+            var pxStart = Math.Max(topLeftPixel.X, 0);
+            var pxEnd = Math.Min(bottomRightPixel.X, Width);
+            var pyStart = Math.Max(topLeftPixel.Y, 0);
+            var pyEnd = Math.Min(bottomRightPixel.Y, Height);
+
+            for (var ix = pxStart; ix < pxEnd; ix++)
+            {
+                for (var iy = pyStart; iy < pyEnd; iy++)
+                {
+                    var textureX = ix - pxStart;
+                    var textureY = iy - pyStart;
+
+                    var color = Color.FromArgb(texture.Buffer[textureY * texture.Width + textureX]);
+                    if (color.A > 0)
+                    {
+                        // Handle alpha values by blending with the background color.
+                        var backgroundColor = GetPixel(ix, iy);
+                        var blendedColor = Blend(backgroundColor, color, color.A);
+                        SetPixel(ix, iy, blendedColor);
+                    }
+                }
+            }
         }
     }
 }

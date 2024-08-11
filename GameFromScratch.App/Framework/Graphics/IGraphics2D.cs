@@ -32,5 +32,7 @@ namespace GameFromScratch.App.Framework.Graphics
         /// the pixel mode of the underlying camera.
         /// </summary>
         public bool PixelMode { get; set; }
+
+        public void DrawTexture(string textureName, Vector2 position);
     }
 }

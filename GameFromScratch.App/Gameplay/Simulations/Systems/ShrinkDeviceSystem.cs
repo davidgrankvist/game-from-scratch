@@ -5,7 +5,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
 {
     internal class ShrinkDeviceSystem : ISystem
     {
-        private const float minScale = 0.5f;
+        private const float minScale = 0.4f;
         private float scale = 1;
         private const float scaleStep = 0.5f;
 

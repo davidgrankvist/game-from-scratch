@@ -19,5 +19,6 @@ namespace GameFromScratch.App.Gameplay.Simulations.Entities
 
         // graphics
         public Color Color;
+        public string TextureName = string.Empty;
     }
 }
