@@ -34,8 +34,10 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay
 
             systems.AddRange([
                 new SpawnSystem(level),
+                new PlayerControlSystem(),
+                new DeviceSwitcherSystem(),
                 new ShrinkDeviceSystem(),
-                new MovementControlsSystem(),
+                new MovementControlSystem(),
                 new MapInverterDeviceSystem(),
                 new GravityInverterDeviceSystem(),
                 new GravitySystem(),

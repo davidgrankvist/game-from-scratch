@@ -1,6 +1,4 @@
-﻿using GameFromScratch.App.Framework.Input;
-using GameFromScratch.App.Gameplay.LevelGameplay.Context;
-using System.Numerics;
+﻿using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 
 namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
@@ -12,8 +10,8 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 
         public void Update(GameContext context)
         {
-            var input = context.Tools.Input;
-            if (input.IsPressed(KeyCode.S))
+            var state = context.State;
+            if (state.IsActiveInput(PlayerInputFlags.UseDevicePress) && state.ActiveDevice == PlayerDevice.GravityInverter)
             {
                 context.State.GravitySign *= -1;
             }

@@ -1,10 +1,9 @@
-﻿using GameFromScratch.App.Framework.Input;
-using GameFromScratch.App.Gameplay.LevelGameplay.Context;
+﻿using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
-    internal class MovementControlsSystem : ISystem
+    internal class MovementControlSystem : ISystem
     {
         public void Initialize(GameContext context)
         {
@@ -13,7 +12,8 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
         public void Update(GameContext context)
         {
             var input = context.Tools.Input;
-            var player = context.State.Repository.Player;
+            var state = context.State;
+            var player = state.Repository.Player;
 
             var playerVx = player.Velocity.X;
             var playerVy = player.Velocity.Y;
@@ -26,15 +26,15 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
                 playerVx = 0;
             }
 
-            if (input.IsPressed(KeyCode.W) && isTouchingGround)
+            if (state.IsActiveInput(PlayerInputFlags.MoveJump) && isTouchingGround)
             {
                 playerVy = -player.JumpSpeed * context.State.GravitySign;
             }
-            if (input.IsDown(KeyCode.A))
+            if (state.IsActiveInput(PlayerInputFlags.MoveLeft))
             {
                 playerVx = -player.Speed;
             }
-            if (input.IsDown(KeyCode.D))
+            if (state.IsActiveInput(PlayerInputFlags.MoveRight))
             {
                 playerVx = player.Speed;
             }

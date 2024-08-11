@@ -7,6 +7,8 @@
         D,
         S,
         W,
+        E,
+        Q,
         // mouse
         MouseLeft,
         MouseRight,

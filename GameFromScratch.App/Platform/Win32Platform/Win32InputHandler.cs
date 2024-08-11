@@ -53,6 +53,10 @@ namespace GameFromScratch.App.Platform.Win32Platform
                     return KeyCode.S;
                 case 0x44:
                     return KeyCode.D;
+                case 0x45:
+                    return KeyCode.E;
+                case 0x51:
+                    return KeyCode.Q;
                 default:
                     return null;
             }

@@ -1,5 +1,4 @@
-﻿using GameFromScratch.App.Framework.Input;
-using GameFromScratch.App.Gameplay.LevelGameplay.Context;
+﻿using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
@@ -24,10 +23,10 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 
         public void Update(GameContext context)
         {
-            var input = context.Tools.Input;
+            var state = context.State;
             var didScale = false;
 
-            if (input.IsDown(KeyCode.MouseLeft))
+            if (state.IsActiveInput(PlayerInputFlags.UseDeviceHold) && state.ActiveDevice == PlayerDevice.Shrinker)
             {
                 scale = MathF.Max(scale - scaleStep * context.State.DeltaTime, minScale);
                 didScale = true;

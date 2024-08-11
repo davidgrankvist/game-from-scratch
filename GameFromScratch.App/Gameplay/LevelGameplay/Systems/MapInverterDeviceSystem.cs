@@ -1,5 +1,4 @@
-﻿using GameFromScratch.App.Framework.Input;
-using GameFromScratch.App.Gameplay.Common.Entities;
+﻿using GameFromScratch.App.Gameplay.Common.Entities;
 using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 
 namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
@@ -12,8 +11,8 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 
         public void Update(GameContext context)
         {
-            var input = context.Tools.Input;
-            if (!input.IsPressed(KeyCode.MouseRight))
+            var state = context.State;
+            if (!(state.IsActiveInput(PlayerInputFlags.UseDevicePress) && state.ActiveDevice == PlayerDevice.MapInverter))
             {
                 return;
             }
