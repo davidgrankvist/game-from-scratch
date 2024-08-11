@@ -1,5 +1,7 @@
 ﻿using GameFromScratch.App.Gameplay.Common.Entities;
 using GameFromScratch.App.Gameplay.LevelGameplay.Context;
+using System.Drawing;
+using System.Numerics;
 
 namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
@@ -22,6 +24,16 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
             }
             var player = repo.Player;
             graphics.DrawTexture(player.TextureName, player.Position, player.Bounds.X, player.Bounds.Y);
+
+            DrawUi(context);
+        }
+
+        private static void DrawUi(GameContext context)
+        {
+            var graphics = context.Tools.Graphics;
+            graphics.PixelMode = true;
+            graphics.DrawText($"Active device: {context.State.ActiveDevice}", 16, Color.Green, new Vector2(10, 10));
+            graphics.PixelMode = false;
         }
     }
 }

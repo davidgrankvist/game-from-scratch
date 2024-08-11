@@ -28,26 +28,17 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
         public void Update(GameContext context)
         {
             var state = context.State;
-            var didChange = false;
 
             if (state.IsActiveInput(PlayerInputFlags.NextDevice))
             {
                 currentDevice = (currentDevice + 1) % devices.Length;
                 state.ActiveDevice = devices[currentDevice];
-                didChange = true;
             }
 
             if (state.IsActiveInput(PlayerInputFlags.PrevDevice))
             {
                 currentDevice = currentDevice > 0 ? currentDevice - 1 : devices.Length - 1;
                 state.ActiveDevice = devices[currentDevice];
-                didChange = true;
-            }
-
-            // TODO(feature): replace with UI
-            if (didChange)
-            {
-                Console.WriteLine($"Switched device to {state.ActiveDevice}");
             }
         }
     }

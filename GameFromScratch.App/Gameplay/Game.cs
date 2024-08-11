@@ -74,7 +74,7 @@ namespace GameFromScratch.App.Gameplay
             {
                 fpsSampler.Sample();
                 graphics.PixelMode = true;
-                graphics.DrawText($"FPS: {MathF.Round(fpsSampler.Fps, 3)}", 16, Color.Green, new Vector2(10, 10));
+                graphics.DrawText($"FPS: {MathF.Round(fpsSampler.Fps, 3)}", 16, Color.Green, new Vector2(700, 10));
                 graphics.PixelMode = false;
             }
         }
