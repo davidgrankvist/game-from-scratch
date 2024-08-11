@@ -1,4 +1,6 @@
-﻿namespace GameFromScratch.App.Gameplay.Simulations.Entities
+﻿using GameFromScratch.App.Gameplay.Common.Entities;
+
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Context
 {
     internal class EntityRepository
     {

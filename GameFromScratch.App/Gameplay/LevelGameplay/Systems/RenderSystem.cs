@@ -1,14 +1,15 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
+﻿using GameFromScratch.App.Gameplay.Common.Entities;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
     internal class RenderSystem : ISystem
     {
-        public void Initialize(SimulationContext context)
+        public void Initialize(GameContext context)
         {
         }
 
-        public void Update(SimulationContext context)
+        public void Update(GameContext context)
         {
             var repo = context.State.Repository;
             var graphics = context.Tools.Graphics;

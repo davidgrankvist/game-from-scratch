@@ -1,26 +1,27 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Levels;
-using GameFromScratch.App.Gameplay.Simulations.Systems;
+﻿using GameFromScratch.App.Gameplay.Common;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
+using GameFromScratch.App.Gameplay.LevelGameplay.Systems;
 
-namespace GameFromScratch.App.Gameplay.Simulations
+namespace GameFromScratch.App.Gameplay.LevelGameplay
 {
     internal class Simulation
     {
-        private readonly SimulationTools tools;
-        private SimulationContext context;
+        private readonly GameTools tools;
+        private GameContext context;
         private List<ISystem> systems;
 
         public bool IsDone { get => context.State.CompletedLevel; }
 
-        public Simulation(SimulationTools tools)
+        public Simulation(GameTools tools)
         {
             this.tools = tools;
-            context = new SimulationContext(tools);
+            context = new GameContext(tools);
             systems = new List<ISystem>();
         }
 
         private void Reset()
         {
-            context = new SimulationContext(tools);
+            context = new GameContext(tools);
             systems = new List<ISystem>();
         }
 

@@ -1,8 +1,9 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
+﻿using GameFromScratch.App.Gameplay.Common;
+using GameFromScratch.App.Gameplay.Common.Entities;
 using System.Drawing;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Levels
+namespace GameFromScratch.App.Gameplay.LevelSelection.Levels
 {
     internal class ShrinkDeviceDemoLevel : ILevel
     {

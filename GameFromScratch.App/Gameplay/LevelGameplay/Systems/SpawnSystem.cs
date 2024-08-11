@@ -1,6 +1,7 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Levels;
+﻿using GameFromScratch.App.Gameplay.Common;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
     internal class SpawnSystem : ISystem
     {
@@ -11,7 +12,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             this.level = level;
         }
 
-        public void Initialize(SimulationContext context)
+        public void Initialize(GameContext context)
         {
             var entities = level.Create();
 
@@ -19,7 +20,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             repo.AddRange(entities);
         }
 
-        public void Update(SimulationContext context)
+        public void Update(GameContext context)
         {
         }
     }

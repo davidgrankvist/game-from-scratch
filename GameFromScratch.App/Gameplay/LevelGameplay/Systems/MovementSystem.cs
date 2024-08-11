@@ -1,21 +1,22 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
+﻿using GameFromScratch.App.Gameplay.Common.Entities;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
     internal class MovementSystem : ISystem
     {
-        public void Initialize(SimulationContext context)
+        public void Initialize(GameContext context)
         {
         }
 
-        public void Update(SimulationContext context)
+        public void Update(GameContext context)
         {
             MoveEntities(context);
             ResolveCollisions(context);
         }
 
-        private static void MoveEntities(SimulationContext context)
+        private static void MoveEntities(GameContext context)
         {
             var repo = context.State.Repository;
             var entitiesToMove = repo.Query(EntityFlags.Move);
@@ -26,7 +27,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             }
         }
 
-        private static void ResolveCollisions(SimulationContext context)
+        private static void ResolveCollisions(GameContext context)
         {
             /*
              * Approach:

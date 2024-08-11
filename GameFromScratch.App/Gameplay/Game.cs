@@ -1,7 +1,9 @@
 ﻿using GameFromScratch.App.Framework;
 using GameFromScratch.App.Framework.Fps;
 using GameFromScratch.App.Framework.Graphics;
-using GameFromScratch.App.Gameplay.Simulations;
+using GameFromScratch.App.Gameplay.Common;
+using GameFromScratch.App.Gameplay.LevelGameplay;
+using GameFromScratch.App.Gameplay.LevelSelection;
 using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
@@ -36,7 +38,7 @@ namespace GameFromScratch.App.Gameplay
             fpsThrottler = new FpsThrottler(targetFps, windowManager.Sleeper);
             fpsSampler = new FpsSampler(fpsSampleWindow);
 
-            var tools = new SimulationTools(graphics, windowManager.Input, camera);
+            var tools = new GameTools(graphics, windowManager.Input, camera);
             simulation = new Simulation(tools);
             levelSelector = new LevelSelector(tools);
 

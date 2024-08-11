@@ -1,6 +1,6 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
+﻿using GameFromScratch.App.Gameplay.Common.Entities;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Levels
+namespace GameFromScratch.App.Gameplay.Common
 {
     internal interface ILevel
     {

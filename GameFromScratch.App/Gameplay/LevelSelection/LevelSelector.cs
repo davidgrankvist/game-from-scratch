@@ -1,10 +1,10 @@
-﻿using GameFromScratch.App.Framework.Input;
-using GameFromScratch.App.Gameplay.Simulations.Levels;
-using GameFromScratch.App.Gameplay.Simulations.UI;
+﻿using GameFromScratch.App.Gameplay.Common;
+using GameFromScratch.App.Gameplay.LevelSelection.Levels;
+using GameFromScratch.App.Gameplay.LevelSelection.UI;
 using System.Drawing;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations
+namespace GameFromScratch.App.Gameplay.LevelSelection
 {
     internal class LevelSelector
     {
@@ -17,7 +17,7 @@ namespace GameFromScratch.App.Gameplay.Simulations
         public ILevel SelectedLevel { get => levels[selection]; }
         public bool IsReady { get => isReady; }
 
-        private readonly SimulationTools tools;
+        private readonly GameTools tools;
         private int selection;
         private bool isReady;
 
@@ -26,7 +26,7 @@ namespace GameFromScratch.App.Gameplay.Simulations
         private Button selectLevelButton;
         private Vector2 selectedLevelPosition;
 
-        public LevelSelector(SimulationTools tools)
+        public LevelSelector(GameTools tools)
         {
             this.tools = tools;
 

@@ -1,7 +1,8 @@
 ﻿using GameFromScratch.App.Framework.Input;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
     internal class ShrinkDeviceSystem : ISystem
     {
@@ -13,7 +14,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
         private float speedStart;
         private float jumpSpeedStart;
 
-        public void Initialize(SimulationContext context)
+        public void Initialize(GameContext context)
         {
             var player = context.State.Repository.Player;
             boundsStart = player.Bounds;
@@ -21,7 +22,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.Systems
             jumpSpeedStart = player.JumpSpeed;
         }
 
-        public void Update(SimulationContext context)
+        public void Update(GameContext context)
         {
             var input = context.Tools.Input;
             var didScale = false;

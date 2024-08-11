@@ -1,15 +1,16 @@
 ﻿using GameFromScratch.App.Framework.Input;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
     internal class MovementControlsSystem : ISystem
     {
-        public void Initialize(SimulationContext context)
+        public void Initialize(GameContext context)
         {
         }
 
-        public void Update(SimulationContext context)
+        public void Update(GameContext context)
         {
             var input = context.Tools.Input;
             var player = context.State.Repository.Player;

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Entities
+namespace GameFromScratch.App.Gameplay.Common.Entities
 {
     internal class Entity
     {

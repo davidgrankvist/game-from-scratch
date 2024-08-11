@@ -1,4 +1,4 @@
-﻿namespace GameFromScratch.App.Gameplay.Simulations.Entities
+﻿namespace GameFromScratch.App.Gameplay.Common.Entities
 {
     [Flags]
     internal enum EntityFlags

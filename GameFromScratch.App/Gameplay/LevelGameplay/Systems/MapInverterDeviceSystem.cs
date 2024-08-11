@@ -1,15 +1,16 @@
 ﻿using GameFromScratch.App.Framework.Input;
-using GameFromScratch.App.Gameplay.Simulations.Entities;
+using GameFromScratch.App.Gameplay.Common.Entities;
+using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 
-namespace GameFromScratch.App.Gameplay.Simulations.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 {
     internal class MapInverterDeviceSystem : ISystem
     {
-        public void Initialize(SimulationContext context)
+        public void Initialize(GameContext context)
         {
         }
 
-        public void Update(SimulationContext context)
+        public void Update(GameContext context)
         {
             var input = context.Tools.Input;
             if (!input.IsPressed(KeyCode.MouseRight))

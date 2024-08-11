@@ -1,9 +1,10 @@
 ﻿using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Framework.Input;
+using GameFromScratch.App.Gameplay.Common;
 using System.Drawing;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.Simulations.UI
+namespace GameFromScratch.App.Gameplay.LevelSelection.UI
 {
     internal class Button
     {
@@ -20,7 +21,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.UI
 
         private bool IsHovering;
 
-        public void Update(SimulationTools tools)
+        public void Update(GameTools tools)
         {
             CheckInput(tools.Input);
             Draw(tools.Graphics);
@@ -53,7 +54,7 @@ namespace GameFromScratch.App.Gameplay.Simulations.UI
             var buttonCenter = Position + Bounds / 2;
             var textX = buttonCenter.X - FontSize * Text.Length / 3.5f;
             var textY = buttonCenter.Y - FontSize / 2f;
-            var textTopLeft =  new Vector2(textX, textY);
+            var textTopLeft = new Vector2(textX, textY);
             graphics.DrawText(Text, FontSize, TextColor, textTopLeft);
         }
     }

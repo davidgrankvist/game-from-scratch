@@ -1,15 +1,13 @@
-﻿using GameFromScratch.App.Gameplay.Simulations.Entities;
-
-namespace GameFromScratch.App.Gameplay.Simulations
+﻿namespace GameFromScratch.App.Gameplay.LevelGameplay.Context
 {
-    internal class SimulationState
+    internal class GameState
     {
         public readonly EntityRepository Repository;
         public float DeltaTime;
         public float GravitySign;
         public bool CompletedLevel;
 
-        public SimulationState()
+        public GameState()
         {
             Repository = new EntityRepository();
             DeltaTime = 0;
