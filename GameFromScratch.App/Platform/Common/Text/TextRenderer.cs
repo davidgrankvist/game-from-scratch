@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using static FreeTypeSharp.FT;
 using static FreeTypeSharp.FT_LOAD;
 
-namespace GameFromScratch.App.Platform.Common
+namespace GameFromScratch.App.Platform.Common.Text
 {
     /// <summary>
     /// Renders individual character glyphs.

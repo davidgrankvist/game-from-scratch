@@ -1,4 +1,4 @@
-﻿namespace GameFromScratch.App.Platform.Common
+﻿namespace GameFromScratch.App.Platform.Common.Text
 {
     internal struct GlyphBitmap
     {

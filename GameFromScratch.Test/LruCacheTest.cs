@@ -1,4 +1,4 @@
-using GameFromScratch.App.Platform.Common;
+using GameFromScratch.App.Platform.Common.Text;
 
 namespace GameFromScratch.Test
 {

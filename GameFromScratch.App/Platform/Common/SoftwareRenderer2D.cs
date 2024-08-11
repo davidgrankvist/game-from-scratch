@@ -1,6 +1,7 @@
 ﻿using GameFromScratch.App.Framework;
 using GameFromScratch.App.Framework.Graphics;
 using GameFromScratch.App.Framework.Maths;
+using GameFromScratch.App.Platform.Common.Text;
 using System.Drawing;
 using System.Numerics;
 

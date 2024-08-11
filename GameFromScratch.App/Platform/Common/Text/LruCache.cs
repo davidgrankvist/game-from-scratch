@@ -1,7 +1,7 @@
-﻿namespace GameFromScratch.App.Platform.Common
+﻿namespace GameFromScratch.App.Platform.Common.Text
 {
     public class LruCache<TKey, TValue>
-        where TKey: notnull
+        where TKey : notnull
     {
         private readonly Dictionary<TKey, Node> cache;
         private readonly int capacity;

@@ -1,11 +1,11 @@
-﻿namespace GameFromScratch.App.Platform.Common
+﻿namespace GameFromScratch.App.Platform.Common.Textures
 {
-    internal class BmpLoader
+    internal class BmpLoader : IImageLoader
     {
-        public static int[] Load(string texture)
-        {
-            var path = Path.Combine("Assets", "Textures", $"{texture}.bmp");
+        public string FileExtension => ".bmp";
 
+        public (int Width, int Height, int[] Buffer) Load(string path)
+        {
             using (var stream = File.Open(path, FileMode.Open))
             using (var reader = new BinaryReader(stream))
             {
@@ -40,14 +40,14 @@
                         var a = reader.ReadByte();
 
                         // convert to ARGB as it is used in System.Drawing.Color
-                        var argb = (a << 24) | (r << 16) | (g << 8) | b;
+                        var argb = a << 24 | r << 16 | g << 8 | b;
 
                         var index = y * width + x;
                         buffer[index] = argb;
                     }
                 }
 
-                return buffer;
+                return (width, height, buffer);
             }
         }
     }
