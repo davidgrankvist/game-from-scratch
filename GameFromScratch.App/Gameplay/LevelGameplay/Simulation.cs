@@ -1,6 +1,7 @@
 ﻿using GameFromScratch.App.Gameplay.Common;
 using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using GameFromScratch.App.Gameplay.LevelGameplay.Systems;
+using GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices;
 
 namespace GameFromScratch.App.Gameplay.LevelGameplay
 {

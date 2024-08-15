@@ -1,7 +1,7 @@
 ﻿using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 using System.Numerics;
 
-namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices
 {
     internal class ShrinkDeviceSystem : ISystem
     {

@@ -1,6 +1,6 @@
 ﻿using GameFromScratch.App.Gameplay.LevelGameplay.Context;
 
-namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
+namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices
 {
     internal class DeviceSwitcherSystem : ISystem
     {
