@@ -13,6 +13,7 @@ namespace GameFromScratch.App.Gameplay.LevelSelection
             new ShrinkDeviceDemoLevel(),
             new GravityInverterDeviceDemoLevel(),
             new MapInverterDeviceDemoLevel(),
+            new GrapplingHookDemoLevel(),
         ];
 
         public ILevel SelectedLevel { get => levels[selection]; }
