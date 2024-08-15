@@ -1,4 +1,5 @@
-﻿using GameFromScratch.App.Gameplay.Common;
+﻿using GameFromScratch.App.Framework.Input;
+using GameFromScratch.App.Gameplay.Common;
 using GameFromScratch.App.Gameplay.LevelSelection.Levels;
 using GameFromScratch.App.Gameplay.LevelSelection.UI;
 using System.Drawing;
@@ -61,7 +62,7 @@ namespace GameFromScratch.App.Gameplay.LevelSelection
                 TextColor = textColor,
                 FontSize = fontSize,
 
-                OnClick = () => selection = selection <= 0 ? levels.Length - 1 : selection - 1,
+                OnClick = HandlePrevLevel,
             };
 
             nextLevelButton = new Button
@@ -75,7 +76,7 @@ namespace GameFromScratch.App.Gameplay.LevelSelection
                 TextColor = textColor,
                 FontSize = fontSize,
 
-                OnClick = () => selection = (selection + 1) % levels.Length,
+                OnClick = HandleNextLevel,
             };
 
             selectLevelButton = new Button
@@ -89,11 +90,37 @@ namespace GameFromScratch.App.Gameplay.LevelSelection
                 TextColor = textColor,
                 FontSize = fontSize,
 
-                OnClick = () => isReady = true,
+                OnClick = HandleSelectLevel,
             };
         }
 
         public void Update()
+        {
+            CheckKeyboardInput();
+            DrawUI();
+        }
+
+        private void CheckKeyboardInput()
+        {
+            var input = tools.Input;
+
+            if (input.IsPressed(KeyCode.E))
+            {
+                HandleNextLevel();
+            }
+
+            if (input.IsPressed(KeyCode.Q))
+            {
+                HandlePrevLevel();
+            }
+
+            if (input.IsPressed(KeyCode.W))
+            {
+                HandleSelectLevel();
+            }
+        }
+
+        private void DrawUI()
         {
             var graphics = tools.Graphics;
             graphics.PixelMode = true;
@@ -104,6 +131,21 @@ namespace GameFromScratch.App.Gameplay.LevelSelection
             selectLevelButton.Update(tools);
 
             graphics.PixelMode = false;
+        }
+
+        private void HandleNextLevel()
+        {
+            selection = (selection + 1) % levels.Length;
+        }
+
+        private void HandlePrevLevel()
+        {
+            selection = selection <= 0 ? levels.Length - 1 : selection - 1;
+        }
+
+        private void HandleSelectLevel()
+        {
+            isReady = true;
         }
     }
 }
