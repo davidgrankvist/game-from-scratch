@@ -6,5 +6,6 @@
         Shrinker,
         MapInverter,
         GravityInverter,
+        GrapplingHook,
     }
 }

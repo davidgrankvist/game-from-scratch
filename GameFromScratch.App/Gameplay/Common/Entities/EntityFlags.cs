@@ -14,5 +14,6 @@
         Player = 1 << 3,
         Goal = 1 << 4,
         Invert = 1 << 5,
+        Hook =  1 << 6,
     }
 }

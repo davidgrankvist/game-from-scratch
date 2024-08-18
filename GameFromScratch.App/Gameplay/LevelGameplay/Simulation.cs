@@ -39,6 +39,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay
                 new DeviceSwitcherSystem(),
                 new ShrinkDeviceSystem(),
                 new MovementControlSystem(),
+                new GrapplingHookDeviceSystem(),
                 new MapInverterDeviceSystem(),
                 new GravityInverterDeviceSystem(),
                 new GravitySystem(),
