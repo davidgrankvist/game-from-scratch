@@ -37,22 +37,33 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
              *  4. Adjust to a non-overlapping X or Y
              */
             var repo = context.State.Repository;
-            var player = repo.Player;
 
-            // Check if the player moves into something stationary
-            var stationaryEntities = repo.Query(EntityFlags.Solid, EntityFlags.Player);
-            foreach (var entity in stationaryEntities)
+            /*
+             * Simplify by only focusing on player/projectile collision
+             * with stationary entities
+             */
+            var movingEntities = repo.Query(EntityFlags.Solid | EntityFlags.Move);
+            var stationaryEntities = repo.Query(EntityFlags.Solid, EntityFlags.Move);
+            foreach (var movingEntity in movingEntities)
             {
-                var (overlapX, overlapY) = CheckOverlap(player.Position, player.Bounds, entity.Position, entity.Bounds);
-                var didCollide = overlapX && overlapY;
-
-                if (didCollide)
+                foreach (var stationaryEntity in stationaryEntities)
                 {
-                    ResolveMoveIntoStationary(player, entity, context.State.DeltaTime);
+                    var (overlapX, overlapY) = CheckOverlap(movingEntity.Position, movingEntity.Bounds, stationaryEntity.Position, stationaryEntity.Bounds);
+                    var didCollide = overlapX && overlapY;
 
-                    if (entity.Flags.HasFlag(EntityFlags.Goal))
+                    if (didCollide)
                     {
-                        context.State.CompletedLevel = true;
+                        ResolveMoveIntoStationary(movingEntity, stationaryEntity, context.State.DeltaTime);
+
+                        if (movingEntity.Flags.HasFlag(EntityFlags.Player) && stationaryEntity.Flags.HasFlag(EntityFlags.Goal))
+                        {
+                            context.State.CompletedLevel = true;
+                        }
+                        else if (movingEntity.Flags.HasFlag(EntityFlags.Hook))
+                        {
+                            // prevent sliding effect
+                            movingEntity.Velocity = Vector2.Zero;
+                        }
                     }
                 }
             }
