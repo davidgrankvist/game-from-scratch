@@ -31,5 +31,10 @@
         {
             return Math.Min(Math.Max(x, min), max);
         }
+
+        public static float Clamp(float x, float min, float max)
+        {
+            return Math.Min(Math.Max(x, min), max);
+        }
     }
 }

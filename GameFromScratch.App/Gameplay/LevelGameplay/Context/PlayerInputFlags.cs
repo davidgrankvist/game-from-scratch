@@ -11,5 +11,7 @@
         PrevDevice = 1 << 4,
         UseDevicePress = 1 << 5,
         UseDeviceHold = 1 << 6,
+        MoveUp = 1 << 7,
+        MoveDown = 1 << 8,
     }
 }

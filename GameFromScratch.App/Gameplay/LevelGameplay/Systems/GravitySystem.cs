@@ -14,6 +14,10 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 
         public void Update(GameContext context)
         {
+            if (context.State.HookAttached)
+            {
+                return;
+            }
             var deltaTime = context.State.DeltaTime;
             var player = context.State.Repository.Player;
 

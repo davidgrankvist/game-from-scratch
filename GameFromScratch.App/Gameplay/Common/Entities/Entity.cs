@@ -13,6 +13,8 @@ namespace GameFromScratch.App.Gameplay.Common.Entities
         public Vector2 Velocity;
         public float Speed;
         public float JumpSpeed;
+        // movement - pendulum
+        public float AngularVelocity;
 
         // body
         public Vector2 Bounds;

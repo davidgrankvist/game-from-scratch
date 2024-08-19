@@ -53,6 +53,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 
                     if (didCollide)
                     {
+                        //TODO(bug): handle pendulum movement
                         ResolveMoveIntoStationary(movingEntity, stationaryEntity, context.State.DeltaTime);
 
                         if (movingEntity.Flags.HasFlag(EntityFlags.Player) && stationaryEntity.Flags.HasFlag(EntityFlags.Goal))
@@ -63,6 +64,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
                         {
                             // prevent sliding effect
                             movingEntity.Velocity = Vector2.Zero;
+                            context.State.HookAttached = true;
                         }
                     }
                 }

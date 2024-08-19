@@ -16,7 +16,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
 
             state.InputFlags = PlayerInputFlags.None;
 
-            /* Movement */
+            /* Standard movement */
             if (input.IsPressed(KeyCode.W))
             {
                 state.InputFlags = state.InputFlags | PlayerInputFlags.MoveJump;
@@ -28,6 +28,16 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems
             if (input.IsDown(KeyCode.D))
             {
                 state.InputFlags = state.InputFlags | PlayerInputFlags.MoveRight;
+            }
+
+            /* Grappling hook attached */
+            if (input.IsDown(KeyCode.W))
+            {
+                state.InputFlags = state.InputFlags | PlayerInputFlags.MoveUp;
+            }
+            if (input.IsDown(KeyCode.S))
+            {
+                state.InputFlags = state.InputFlags | PlayerInputFlags.MoveDown;
             }
 
             /* Devices */

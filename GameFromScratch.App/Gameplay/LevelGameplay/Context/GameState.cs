@@ -7,6 +7,7 @@
         public float DeltaTime;
         public float GravitySign;
         public bool CompletedLevel;
+        public bool HookAttached;
 
         public PlayerInputFlags InputFlags;
         public PlayerDevice ActiveDevice;
