@@ -9,6 +9,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices
     {
         private Entity grapplingHook;
         private bool isActive;
+        private const float hookRange = 500f;
 
         public GrapplingHookDeviceSystem()
         {
@@ -24,7 +25,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices
         public void Initialize(GameContext context)
         {
             var player = context.State.Repository.Player;
-            grapplingHook.Speed = player.Speed * 1.2f;
+            grapplingHook.Speed = player.Speed * 1.4f;
         }
 
         public void Update(GameContext context)
@@ -32,6 +33,7 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices
             var state = context.State;
             if (state.InputFlags.HasFlag(PlayerInputFlags.UseDevicePress) && state.ActiveDevice == PlayerDevice.GrapplingHook)
             {
+                // fire / detach hook
                 if (isActive)
                 {
                     DetachHook(context);
@@ -39,6 +41,18 @@ namespace GameFromScratch.App.Gameplay.LevelGameplay.Systems.Devices
                 else
                 {
                     FireHook(context);
+                }
+            }
+            else if (isActive)
+            {
+                // despawn projectile if missed or target is out of range
+
+                var repo = state.Repository;
+                var player = repo.Player;
+                var distance = Vector2.Distance(player.Position, grapplingHook.Position);
+                if (distance > hookRange)
+                {
+                    DetachHook(context);
                 }
             }
         }
